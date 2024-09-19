@@ -227,13 +227,13 @@ def update_identificacao_aluno(nis, nome_aluno, sexo_aluno, nascimento_uf, nasci
 
     query = """
         UPDATE identificacao_aluno 
-        SET NIS = %s, nome_aluno = %s, sexo = %s, UF = %s, local_nascimento_municipio = %s, uf_cartorio = %s, nome_cartorio = %s, data_expedicao_identidade = %s, orgao_emissor = %s, uf_identidade = %s, cpf = %s, aluno_raca = %s, municipio_cartório = %s
+        SET NIS = %s, nome_aluno = %s, sexo = %s, UF = %s, local_nascimento_municipio = %s, uf_cartorio = %s, nome_cartorio = %s, data_expedicao_identidade = %s, orgao_emissor = %s, uf_identidade = %s, cpf = %s, aluno_raca = %s, municipio_cartorio = %s
         WHERE id_aluno = %s
     """
     parametros = (nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
               cartorio_uf, nome_cartorio, data_exp_identidade,
               orgao_emissor, uf_identidade, cpf, raca_aluno, cartorio_municipio,id_aluno)
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
 
 def update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, id_aluno):
 
@@ -243,7 +243,7 @@ def update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_
         WHERE id_aluno = %s
     """
     parametros = (num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, id_aluno)
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
 
 
 def update_informacoes_matricula(nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia,id_aluno):
@@ -255,7 +255,7 @@ def update_informacoes_matricula(nome_escola, cod_censo, data_ingresso_escola, m
     parametros = (nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula,
                   codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, id_aluno)
 
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
 
 def update_dados_pais_responsavel(nome_mae, nome_pai, id_aluno):
     query = """
@@ -264,7 +264,7 @@ def update_dados_pais_responsavel(nome_mae, nome_pai, id_aluno):
         WHERE id_aluno = %s
     """
     parametros = (nome_mae, nome_pai, id_aluno)
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
 
 def update_saude(autismo, rett, asperger, transtorno_desintegrativo, baixa_visao, cegueira, auditiva, intelectual, fisica, multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, id_aluno):
     query = """
@@ -273,7 +273,7 @@ def update_saude(autismo, rett, asperger, transtorno_desintegrativo, baixa_visao
         WHERE id_aluno = %s
     """
     parametros = (autismo, rett, asperger, transtorno_desintegrativo, baixa_visao, cegueira, auditiva, intelectual, fisica, multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, id_aluno)
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
 
 def update_endereco(endereco, complemento, numero_endereco, municipio, bairro, cep, zona, telefone, email, uf, id_aluno):
 
@@ -283,7 +283,7 @@ def update_endereco(endereco, complemento, numero_endereco, municipio, bairro, c
         WHERE id_aluno = %s
     """
     parametros = (endereco, complemento, numero_endereco, municipio, bairro, cep, telefone, email, uf, zona, id_aluno)
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
 
 def listar_alunos_por_turma(codigo_turma):
     query = """
