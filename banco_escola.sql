@@ -120,3 +120,9 @@ CREATE TABLE solicitacao_matricula (
     FOREIGN KEY (id_aluno) REFERENCES identificacao_aluno(id_aluno)
 );
 
+CREATE TABLE controle (
+    total_dias INT,
+    mes INT
+);
+
+INSERT INTO controle (total_dias, mes) VALUES (0, 0);
