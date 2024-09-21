@@ -249,6 +249,8 @@ class Ui_RelatorioWindow(object):
         self.cancel_button.setText(_translate("MainWindow", "Cancelar"))
         self.refresh_button_2.setText(_translate("MainWindow", "EXPORTAR"))
 
+#region FUNÇÕES
+
     def voltar_menu(self):
         from home_screen import Ui_MainWindow
         self.tela_principal = QtWidgets.QMainWindow()
@@ -256,7 +258,6 @@ class Ui_RelatorioWindow(object):
         self.ui.setupUi(self.tela_principal)           
         self.tela_principal.show()                     
         QtWidgets.QApplication.instance().activeWindow().close()
-
 
     def atualizar_tabela(self):
         codigo_serie = self.turma_selection.currentText()
@@ -318,3 +319,5 @@ class Ui_RelatorioWindow(object):
         alerta.setIcon(QMessageBox.Icon.Critical)
         alerta.setStandardButtons(QMessageBox.StandardButton.Ok)
         alerta.exec()
+
+    #endregion

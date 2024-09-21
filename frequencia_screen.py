@@ -2,11 +2,14 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtGui import QIcon
-from database import listar_alunos_por_turma, realiza_freq, obter_id_aluno_por_matricula
+from database import * #listar_alunos_por_turma, realiza_freq, obter_id_aluno_por_matricula, obter_total_dias
 from criar_excel import adicionar_dados_excel
+from datetime import date
+
 
 class UI_FrequenciaWindow(object):
     def setupUi(self, MainWindow):
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(1280, 720)
@@ -117,8 +120,8 @@ class UI_FrequenciaWindow(object):
         self.title_label.setFont(font)
         self.title_label.setStyleSheet("color: rgb(130, 3, 0);")
         self.title_label.setObjectName("title_label")
-        
         self.date_selection = QtWidgets.QDateEdit(parent=self.centralwidget)
+        self.date_selection.setDate(date.today())
         self.date_selection.setGeometry(QtCore.QRect(80, 90, 151, 41))
         
         font = QtGui.QFont()        
@@ -201,6 +204,8 @@ class UI_FrequenciaWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.atualizar_lista_de_frequencia()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Frequência"))
@@ -209,7 +214,11 @@ class UI_FrequenciaWindow(object):
         self.title_label.setText(_translate("MainWindow", "<html><head/><body><p>frequencia</p></body></html>"))
         self.date_selection.setDisplayFormat(_translate("MainWindow", "d/M/yyyy"))
 
+
+#region FUNÇÕES
+
     def atualizar_lista_de_frequencia(self):
+        self.total_dias_letivos = obter_total_dias()
         alunos = self.listar_alunos()
         self.listaFreqRefresh(alunos)
 
@@ -255,10 +264,12 @@ class UI_FrequenciaWindow(object):
                         sucesso = False
                         print(f"Não foi possível encontrar o ID para a matrícula {matricula}")
         if sucesso:
+                print(self.total_dias_letivos)
+                update_controle(self.total_dias_letivos + 1)
+                print(self.porcentagem(1))
                 self.exibir_mensagem_sucesso()
         else:
                 self.exibir_mensagem_erro()
-
 
     def exibir_mensagem_sucesso(self):
         data_presenca = self.date_selection.date().toString("yyyy-MM-dd")
@@ -289,3 +300,8 @@ class UI_FrequenciaWindow(object):
         self.tela_principal.show()                     
         QtWidgets.QApplication.instance().activeWindow().close()
 
+    def porcentagem(self, presencas):
+        print("entrou em porcentagem")
+        return (presencas*100)/self.total_dias_letivos
+
+    #endregion

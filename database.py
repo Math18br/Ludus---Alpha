@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import psycopg2
 import os
+from datetime import date
 
 load_dotenv()
 
@@ -18,7 +19,38 @@ def connect_db():
         print(f"Falha ao conectar ao banco de dados: {e}")
     except Exception as e:
         print(f"Um erro inesperado ocorreu: {e}")
-    
+
+def last_id():
+    conn = connect_db()
+    try:
+        cur = conn.cursor()
+
+        query = "SELECT id_aluno FROM identificacao_aluno ORDER BY id_aluno DESC LIMIT 1;"
+        cur.execute(query)
+
+        result = cur.fetchone()
+        last_id_aluno = result[0] if result is not None else 0
+
+        cur.close()
+        conn.close()
+
+        return last_id_aluno
+
+    except Exception as e:
+        print(f"Erro ao conectar ao banco de dados: {e}")
+        return None
+
+def checa_matricula(matricula):
+    query = """
+        SELECT matricula
+        FROM informacoes_matricula
+        WHERE matricula = %s
+    """
+    parametros = (matricula,)
+    resultado = executar_query_matricula(query, parametros)
+    return bool(resultado)
+
+#region EXECUTAR
 def executar_query(conn, query, parametros):
     try:
         with conn.cursor() as cur:
@@ -44,7 +76,6 @@ def executar_query_realiza_freq(query, parametros):
     else:
         return "Conexão com o banco de dados não foi estabelecida."
 
-    
 def executar_query_freq(query, parametros):
     conn = connect_db()
     try:
@@ -82,27 +113,9 @@ def executar_query_matricula(query, parametros):
         cur.close()
         conn.close()
 
+#endregion
 
-def last_id():
-    conn = connect_db()
-    try:
-        cur = conn.cursor()
-
-        query = "SELECT id_aluno FROM identificacao_aluno ORDER BY id_aluno DESC LIMIT 1;"
-        cur.execute(query)
-
-        result = cur.fetchone()
-        last_id_aluno = result[0] if result is not None else 0
-
-        cur.close()
-        conn.close()
-
-        return last_id_aluno
-
-    except Exception as e:
-        print(f"Erro ao conectar ao banco de dados: {e}")
-        return None
-
+#region INSERTS
 def insert_cadastro_sistema(login,nome_prof,senha):
 
     print(login)
@@ -201,18 +214,6 @@ def insert_informacoes_matricula(conn, id_aluno, nome_escola, cod_censo, data_in
     
     return executar_query(conn, query, parametros)
 
-
-def checa_matricula(matricula):
-    query = """
-        SELECT matricula
-        FROM informacoes_matricula
-        WHERE matricula = %s
-    """
-    parametros = (matricula,)
-    resultado = executar_query_matricula(query, parametros)
-    return bool(resultado)
-
-
 def insert_solicitacao_matricula(nome_aluno, matricula, codigo_turma, turno, codigo_serie, ano_letivo, documentos_pendentes):
     query = """
         INSERT INTO solicitacao_matricula
@@ -221,8 +222,25 @@ def insert_solicitacao_matricula(nome_aluno, matricula, codigo_turma, turno, cod
     """
     parametros = (last_id(), nome_aluno, matricula, codigo_turma, turno, codigo_serie, ano_letivo, documentos_pendentes)
     return executar_query(query, parametros)
+#endregion
 
-#UPDATES
+#region UPDATES
+
+def update_controle(total_dias):
+    mes = date.today().month
+
+    if mes == int(obter_mes()):
+        print("mes igual")
+        query = "UPDATE controle SET total_dias = %s, mes = %s"
+        parametros = (total_dias, mes)
+        return executar_query_freq(query, parametros)
+    else:
+        print("mes diferente")
+        total_dias = 1
+        query = "UPDATE controle SET total_dias = %s, mes = %s"
+        parametros = (total_dias, mes)
+        return executar_query_freq(query, parametros)
+
 def update_identificacao_aluno(nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,cartorio_uf, nome_cartorio, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, id_aluno):
 
     query = """
@@ -285,6 +303,8 @@ def update_endereco(endereco, complemento, numero_endereco, municipio, bairro, c
     parametros = (endereco, complemento, numero_endereco, municipio, bairro, cep, telefone, email, uf, zona, id_aluno)
     return executar_query_freq(query, parametros)
 
+#endregion
+
 def listar_alunos_por_turma(codigo_turma):
     query = """
         SELECT ia.nome_aluno, im.matricula
@@ -340,6 +360,7 @@ def obter_frequencias_por_turma(codigo_serie):
         INNER JOIN informacoes_matricula im ON ia.id_aluno = im.id_aluno
         WHERE im.codigo_serie = %s;
     """
+
     parametros = (codigo_serie,)
     
     alunos = executar_query_freq(query, parametros)
@@ -358,6 +379,52 @@ def obter_id_aluno_por_matricula(matricula):
             return result[0]
         else:
             return None
+    except Exception as e:
+        print(f"Erro ao conectar ao banco de dados: {e}")
+        return None
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+def obter_total_dias():
+    query = "SELECT total_dias FROM controle"
+    conn = connect_db()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(query)
+        result = cur.fetchone()
+        if result:
+            total_dias_atual = result[0]
+            return total_dias_atual
+        else:
+            return None
+
+    except Exception as e:
+        print(f"Erro ao conectar ao banco de dados: {e}")
+        return None
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+def obter_mes():
+    query = "SELECT mes FROM controle"
+    conn = connect_db()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(query)
+        result = cur.fetchone()
+        if result:
+            total_dias_atual = result[0]
+            return total_dias_atual
+        else:
+            return None
+
     except Exception as e:
         print(f"Erro ao conectar ao banco de dados: {e}")
         return None
