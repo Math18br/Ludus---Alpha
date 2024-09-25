@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-from database import listar_frequencias_por_turma_ano
+from database import listar_frequencias_por_turma_ano, porcentagem, obter_id_aluno_por_matricula, obter_frequencias_por_aluno
 import csv
 import os
 
@@ -205,6 +205,8 @@ class Ui_RelatorioWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.atualizar_tabela()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Relatorio das Frequências"))
@@ -265,7 +267,7 @@ class Ui_RelatorioWindow(object):
         frequencias = listar_frequencias_por_turma_ano(codigo_serie, ano_selecionado)
         #print("Dados retornados:", frequencias)
         self.tableWidget.setRowCount(len(frequencias))
-        self.tableWidget.setColumnCount(14) 
+        self.tableWidget.setColumnCount(14)
 
         headers = ["Nome Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "St", "Out", "Nov", "Dez"]]
         self.tableWidget.setHorizontalHeaderLabels(headers)
@@ -274,11 +276,26 @@ class Ui_RelatorioWindow(object):
                 # freq[0] = nome do aluno, freq[1] = matrícula, freq[2:] = faltas por mês
                 self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(freq[0])))  # nome
                 self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(str(freq[1])))  # matricula
+
+                matricula = self.tableWidget.item(row, 1).text()
+
+                print(self.porcentagem_mensal(ano_selecionado, matricula))
+
                 for col in range(2, 14):
                         if col-2 < len(freq[2:]):
                                 self.tableWidget.setItem(row, col, QtWidgets.QTableWidgetItem(str(freq[col])))
                         else:
                                 self.tableWidget.setItem(row, col, QtWidgets.QTableWidgetItem("N/A"))
+
+    def porcentagem_mensal(self, ano_selecionado, matricula):
+        id_aluno = obter_id_aluno_por_matricula(matricula)
+        lista_porcentagens = []
+
+        for i in range(1, 13):
+            frequencia = obter_frequencias_por_aluno(id_aluno, ano_selecionado, i)
+            lista_porcentagens.append(f"{porcentagem(frequencia, i)}%")
+            #print(f'PORCENTAGEM MES {i}: {porcentagem(frequencias, i)}%')
+        return lista_porcentagens
 
     def exportar_para_csv(self):
           nome_arquivo = 'base_relatório.csv'

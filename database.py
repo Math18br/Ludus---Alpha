@@ -5,6 +5,7 @@ from datetime import date
 
 load_dotenv()
 
+
 def connect_db():
     try:
         conn = psycopg2.connect(
@@ -19,6 +20,7 @@ def connect_db():
         print(f"Falha ao conectar ao banco de dados: {e}")
     except Exception as e:
         print(f"Um erro inesperado ocorreu: {e}")
+
 
 def last_id():
     conn = connect_db()
@@ -40,6 +42,7 @@ def last_id():
         print(f"Erro ao conectar ao banco de dados: {e}")
         return None
 
+
 def checa_matricula(matricula):
     query = """
         SELECT matricula
@@ -50,6 +53,18 @@ def checa_matricula(matricula):
     resultado = executar_query_matricula(query, parametros)
     return bool(resultado)
 
+
+def porcentagem(presencas, mes):
+
+    if obter_total_dias(mes) != 0:
+        porcent = (int(presencas)*100)/obter_total_dias(mes)
+        return porcent
+    elif obter_total_dias(mes) == 0:
+        porcent = 0
+        return porcent
+    else:
+        print("total dias não é um numero")
+
 #region EXECUTAR
 def executar_query(conn, query, parametros):
     try:
@@ -59,7 +74,8 @@ def executar_query(conn, query, parametros):
     except psycopg2.Error as e:
         print(f"Falha ao executar query: {str(e)}")
         return False
-    
+
+
 def executar_query_realiza_freq(query, parametros):
     conn = connect_db()
     if conn is not None:
@@ -75,6 +91,7 @@ def executar_query_realiza_freq(query, parametros):
             conn.close()
     else:
         return "Conexão com o banco de dados não foi estabelecida."
+
 
 def executar_query_freq(query, parametros):
     conn = connect_db()
@@ -95,6 +112,7 @@ def executar_query_freq(query, parametros):
         cur.close()
         conn.close()
 
+
 def executar_query_matricula(query, parametros):
     conn = connect_db()
     try:
@@ -113,6 +131,7 @@ def executar_query_matricula(query, parametros):
         cur.close()
         conn.close()
 
+
 #endregion
 
 #region INSERTS
@@ -126,6 +145,7 @@ def insert_cadastro_sistema(login,nome_prof,senha):
 
     parametros = (login, nome_prof, senha)
     return executar_query_freq(query, parametros)
+
 
 def insert_identificacao_aluno(conn, nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
                                cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade,
@@ -147,7 +167,6 @@ def insert_identificacao_aluno(conn, nis, nome_aluno, sexo_aluno, nascimento_uf,
     id_aluno = cur.fetchone()[0]
     cur.close()
     return id_aluno
-
 
 
 def insert_certidao(conn, id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao):
@@ -179,8 +198,6 @@ def insert_saude(conn, id_aluno, autismo, rett, asperger, transtorno_desintegrat
     return executar_query(conn, query, parametros)
 
 
-
-
 def insert_endereco(conn, id_aluno, endereco, complemento, numero_endereco, municipio, bairro, cep, zona, telefone, email, uf):
     query = """
         INSERT INTO endereco (id_aluno, endereco, complemento, numero_endereco, municipio, bairro, cep, zona, telefone, email, uf)
@@ -188,7 +205,6 @@ def insert_endereco(conn, id_aluno, endereco, complemento, numero_endereco, muni
     """
     parametros = (id_aluno, endereco, complemento, numero_endereco, municipio, bairro, cep, zona, telefone, email, uf)
     return executar_query(conn, query, parametros)
-
 
 
 def insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai):
@@ -199,7 +215,6 @@ def insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai):
     """
     parametros = (id_aluno, nome_mae, nome_pai)
     return executar_query(conn, query, parametros)
-
 
 
 def insert_informacoes_matricula(conn, id_aluno, nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula,
@@ -221,25 +236,107 @@ def insert_solicitacao_matricula(nome_aluno, matricula, codigo_turma, turno, cod
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """
     parametros = (last_id(), nome_aluno, matricula, codigo_turma, turno, codigo_serie, ano_letivo, documentos_pendentes)
-    return executar_query(query, parametros)
+    return executar_query_freq(query, parametros)
+
+def insert_controle(ano):
+    dia_zero = 0
+    query = """
+           INSERT INTO controle
+           (ano, letivos_jan, letivos_fev, letivos_mar, letivos_abr, letivos_mai, letivos_jun, letivos_jul, letivos_ago, letivos_set, letivos_out, letivos_nov, letivos_dez)
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+       """
+    parametros = (ano, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero, dia_zero)
+    return executar_query_freq(query, parametros)
+
 #endregion
 
 #region UPDATES
 
-def update_controle(total_dias):
-    mes = date.today().month
+def update_controle(total_dias,mes,ano):
 
-    if mes == int(obter_mes()):
-        print("mes igual")
-        query = "UPDATE controle SET total_dias = %s, mes = %s"
-        parametros = (total_dias, mes)
-        return executar_query_freq(query, parametros)
+    if ano == int(obter_ano()):
+        print("ano igual")
+        if mes == 1:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_jan = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 2:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_fev = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 3:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_mar = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 4:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_abr = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 5:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_mai = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 6:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_jun = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 7:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_jul = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 8:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_ago = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 9:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_set = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 10:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_out = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 11:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_nov = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        elif mes == 12:
+            print(f"mes {mes}, dias letivos {total_dias}")
+            query = "UPDATE controle SET letivos_dez = %s WHERE ano = %s"
+            parametros = (total_dias, ano)
+            return executar_query_freq(query, parametros)
+
+        else:
+            print("Valor inválido")
+
     else:
-        print("mes diferente")
+        print("ano diferente")
         total_dias = 1
-        query = "UPDATE controle SET total_dias = %s, mes = %s"
-        parametros = (total_dias, mes)
-        return executar_query_freq(query, parametros)
+        insert_controle(ano)
+        update_controle(total_dias, mes, obter_ano())
+
 
 def update_identificacao_aluno(nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,cartorio_uf, nome_cartorio, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, id_aluno):
 
@@ -343,7 +440,6 @@ def listar_frequencias_por_turma_ano(codigo_serie, ano):
     resultados = executar_query_freq(query, parametros)
     return resultados
 
-
 def realiza_freq(id_aluno, nome_aluno, matricula, data_presenca, presenca, justificativa, observacoes):
     query= """
         INSERT INTO frequencia (id_aluno, nome_aluno, matricula, data_presenca, presenca, justificativa, observacoes)
@@ -367,6 +463,24 @@ def obter_frequencias_por_turma(codigo_serie):
 
     return alunos
 
+def obter_frequencias_por_aluno(id_aluno, ano, mes):
+    query =  """
+        SELECT COUNT(*) 
+        FROM frequencia 
+        WHERE id_aluno = %s
+        AND EXTRACT(YEAR FROM data_presenca) = %s
+        AND EXTRACT(MONTH FROM data_presenca) = %s
+        AND presenca = 'P'
+    """
+
+    parametros = (id_aluno, ano, mes)
+
+    frequencia = executar_query_freq(query, parametros)
+
+    print(f"id aluno {id_aluno}, ano {ano}, mes {mes}, dias letivos {frequencia[0][0]}")
+
+    return frequencia[0][0]
+
 def obter_id_aluno_por_matricula(matricula):
     query = "SELECT id_aluno FROM informacoes_matricula WHERE matricula = %s;"
     parametros = (matricula,)
@@ -388,8 +502,8 @@ def obter_id_aluno_por_matricula(matricula):
         if conn:
             conn.close()
 
-def obter_total_dias():
-    query = "SELECT total_dias FROM controle"
+def obter_total_dias(mes):
+    query = "SELECT * FROM controle"
     conn = connect_db()
 
     try:
@@ -397,7 +511,7 @@ def obter_total_dias():
         cur.execute(query)
         result = cur.fetchone()
         if result:
-            total_dias_atual = result[0]
+            total_dias_atual = result[mes]
             return total_dias_atual
         else:
             return None
@@ -411,8 +525,8 @@ def obter_total_dias():
         if conn:
             conn.close()
 
-def obter_mes():
-    query = "SELECT mes FROM controle"
+def obter_ano():
+    query = "SELECT ano FROM controle ORDER BY ano DESC LIMIT 1"
     conn = connect_db()
 
     try:
@@ -420,8 +534,8 @@ def obter_mes():
         cur.execute(query)
         result = cur.fetchone()
         if result:
-            total_dias_atual = result[0]
-            return total_dias_atual
+            ano = result[0]
+            return ano
         else:
             return None
 

@@ -218,7 +218,6 @@ class UI_FrequenciaWindow(object):
 #region FUNÇÕES
 
     def atualizar_lista_de_frequencia(self):
-        self.total_dias_letivos = obter_total_dias()
         alunos = self.listar_alunos()
         self.listaFreqRefresh(alunos)
 
@@ -239,6 +238,8 @@ class UI_FrequenciaWindow(object):
 
     def confirmar_frequencia(self):
         data_presenca = self.date_selection.date().toString("yyyy-MM-dd")
+        mes = self.date_selection.date().month()
+        ano = self.date_selection.date().year()
         justificativa = self.just_caixa.toPlainText()
         observacoes = self.obs_text.toPlainText()
         sucesso = True
@@ -247,6 +248,7 @@ class UI_FrequenciaWindow(object):
                 item = self.lista_freq.item(index)
                 matricula, nome_aluno = item.text().split(' - ')
                 id_aluno = obter_id_aluno_por_matricula(matricula)
+                total = obter_total_dias(mes)
                 if id_aluno:
                         estado_presenca = 'P' if item.checkState() == Qt.CheckState.Checked else 'A'
                         realiza_freq(id_aluno, nome_aluno, matricula, data_presenca, estado_presenca, justificativa, observacoes)
@@ -260,13 +262,16 @@ class UI_FrequenciaWindow(object):
                                 "OBSERVAÇÕES": observacoes
                         }
                         adicionar_dados_excel('base_dados_frequencia.xlsx', informacoes_frequencia)
+
+                        novo_total = total + 1  # Adiciona 1 ao total de dias letivos toda vez que realiza a frequencia
+                        print(novo_total)
+                        update_controle(novo_total, mes, ano)
                 else:
                         sucesso = False
                         print(f"Não foi possível encontrar o ID para a matrícula {matricula}")
         if sucesso:
-                print(self.total_dias_letivos)
-                update_controle(self.total_dias_letivos + 1)
-                print(self.porcentagem(1))
+
+                self.atualizar_lista_de_frequencia()
                 self.exibir_mensagem_sucesso()
         else:
                 self.exibir_mensagem_erro()
@@ -300,8 +305,5 @@ class UI_FrequenciaWindow(object):
         self.tela_principal.show()                     
         QtWidgets.QApplication.instance().activeWindow().close()
 
-    def porcentagem(self, presencas):
-        print("entrou em porcentagem")
-        return (presencas*100)/self.total_dias_letivos
 
     #endregion

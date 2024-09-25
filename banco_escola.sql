@@ -121,8 +121,20 @@ CREATE TABLE solicitacao_matricula (
 );
 
 CREATE TABLE controle (
-    total_dias INT,
-    mes INT
+	ano INT,
+    letivos_jan INT,
+	letivos_fev INT,
+	letivos_mar INT,
+	letivos_abr INT,
+	letivos_mai INT,
+	letivos_jun INT,
+	letivos_jul INT,
+	letivos_ago INT,
+	letivos_set INT,
+	letivos_out INT,
+	letivos_nov INT,
+	letivos_dez INT
 );
 
-INSERT INTO controle (total_dias, mes) VALUES (0, 0);
+INSERT INTO controle (ano, letivos_jan, letivos_fev, letivos_mar, letivos_abr, letivos_mai, letivos_jun, letivos_jul, letivos_ago, letivos_set, letivos_out, letivos_nov, letivos_dez) VALUES (2024, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
