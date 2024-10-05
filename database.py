@@ -191,10 +191,11 @@ def insert_saude(conn, id_aluno, autismo, rett, asperger, transtorno_desintegrat
     parametros = (id_aluno, autismo, rett, asperger, transtorno_desintegrativo,
                   baixa_visao, cegueira, auditiva, intelectual, fisica,
                   multipla, sindrome_down, surdez, surdocegueira, altas_habilidades)
-    
+    """
     print("Debugging insert_saude:", id_aluno, autismo, rett, asperger, transtorno_desintegrativo,
       baixa_visao, cegueira, auditiva, intelectual, fisica,
       multipla, sindrome_down, surdez, surdocegueira, altas_habilidades)
+    """
     return executar_query(conn, query, parametros)
 
 
@@ -255,75 +256,75 @@ def insert_controle(ano):
 def update_controle(total_dias,mes,ano):
 
     if ano == int(obter_ano()):
-        print("ano igual")
+        #print("ano igual")
         if mes == 1:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_jan = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 2:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_fev = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 3:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_mar = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 4:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_abr = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 5:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_mai = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 6:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_jun = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 7:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_jul = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 8:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_ago = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 9:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_set = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 10:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_out = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 11:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_nov = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
 
         elif mes == 12:
-            print(f"mes {mes}, dias letivos {total_dias}")
+            #print(f"mes {mes}, dias letivos {total_dias}")
             query = "UPDATE controle SET letivos_dez = %s WHERE ano = %s"
             parametros = (total_dias, ano)
             return executar_query_freq(query, parametros)
@@ -477,7 +478,7 @@ def obter_frequencias_por_aluno(id_aluno, ano, mes):
 
     frequencia = executar_query_freq(query, parametros)
 
-    print(f"id aluno {id_aluno}, ano {ano}, mes {mes}, dias letivos {frequencia[0][0]}")
+    #print(f"id aluno {id_aluno}, ano {ano}, mes {mes}, dias letivos {frequencia[0][0]}")
 
     return frequencia[0][0]
 

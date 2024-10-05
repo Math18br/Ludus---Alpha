@@ -49,14 +49,17 @@ class Ui_MainWindow(object):
 "")
         self.aluno_button.setObjectName("aluno_button")
 
-        self.nome_professor = QtWidgets.QLabel(parent=self.frame)
-        self.nome_professor.setGeometry(QtCore.QRect(9, 156, 405, 28))
+        self.bemvindo = QtWidgets.QLabel(parent=self.frame)
+        self.bemvindo.setGeometry(QtCore.QRect(10, 120, 400, 80))
         font = QtGui.QFont()
         font.setFamily("Trend Slab Four")
-        font.setPointSize(48)
-        self.nome_professor.setFont(font)
-        self.nome_professor.setStyleSheet("color: rgb(130, 3, 0);")
-        self.nome_professor.setObjectName("nome_professor")
+        font.setPointSize(15)
+        self.bemvindo.setFont(font)
+        self.bemvindo.setStyleSheet("color: rgb(130, 3, 0);")
+        self.bemvindo.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.bemvindo.setObjectName("bemvindo")
+        self.bemvindo.setText(f"BEM VINDO PROFESSOR(A): {self.username}")
+
         self.ficha_button = QtWidgets.QPushButton(parent=self.frame, clicked= lambda: self.abrir_tela_relatorio_frequencia())
         self.ficha_button.setGeometry(QtCore.QRect(9, 290, 196, 75))
         self.ficha_button.setMinimumSize(QtCore.QSize(196, 75))
@@ -87,14 +90,7 @@ class Ui_MainWindow(object):
 "color: rgb(243, 230, 213);")
         self.matricula_button.setCheckable(False)
         self.matricula_button.setObjectName("matricula_button")
-        self.welcome_label = QtWidgets.QLabel(parent=self.frame)
-        self.welcome_label.setGeometry(QtCore.QRect(9, 122, 405, 28))
-        font = QtGui.QFont()
-        font.setFamily("Trend Slab Four")
-        font.setPointSize(48)
-        self.welcome_label.setFont(font)
-        self.welcome_label.setStyleSheet("color: rgb(130, 3, 0);")
-        self.welcome_label.setObjectName("welcome_label")
+
         self.LUDUS_logo = QtWidgets.QLabel(parent=self.frame)
         self.LUDUS_logo.setGeometry(QtCore.QRect(9, -8, 405, 120))
         font = QtGui.QFont()
@@ -137,6 +133,34 @@ class Ui_MainWindow(object):
         self.logOut_button.setObjectName("logOut_button")
         self.logOut_button.clicked.connect(self.logout)
 
+        self.register_button = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.register_button.setGeometry(QtCore.QRect(120, 10, 100, 50))  # Logo abaixo do botão de Sair
+        self.register_button.setStyleSheet("background-color: rgb(45, 84, 60);\n"
+                                           "border-style: outset;\n"
+                                           "border-width: 2px;\n"
+                                           "border-radius: 10px;\n"
+                                           "border-color: black;\n"
+                                           "font:bold 14px \"Inter Black\" ;\n"
+                                           "color: rgb(243, 230, 213);\n")
+        self.register_button.setText("Registrar")
+        self.register_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.register_button.setObjectName("register_button")
+        self.register_button.clicked.connect(self.abrir_tela_registro)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        #MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.aluno_button.setToolTip(_translate("MainWindow", "Consulta, alteração e remoção de matriculas existentes"))
+        self.aluno_button.setText(_translate("MainWindow", "Alunos"))
+        self.bemvindo.setText(f"BEM VINDO PROFESSOR(A):\n{self.username}")
+        self.ficha_button.setToolTip(_translate("MainWindow", "Perfis individuais de alunos para exportação"))
+        self.ficha_button.setText(_translate("MainWindow", "Fichas"))
+        self.matricula_button.setToolTip(_translate("MainWindow", "Cadastro de novos alunos nas turmas"))
+        self.matricula_button.setText(_translate("MainWindow", "Matricula"))
+        self.LUDUS_logo.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:72pt;\">LUDUS</span></p></body></html>"))
+        self.frequencia_button.setToolTip(_translate("MainWindow", "Registros de frequências, justificativas e observações"))
+        self.frequencia_button.setText(_translate("MainWindow", "Frequência"))
+
     def abrir_tela_cadastro(self):
         self.tela_cadastro = QtWidgets.QMainWindow()
         self.ui = UI_MatriculaWindow()           
@@ -166,24 +190,16 @@ class Ui_MainWindow(object):
         QtWidgets.QApplication.instance().activeWindow().close()
 
     def logout(self):
-        from main import Ui_Login_Win
+        from main import Ui_LoginScreen
         self.tela_login = QtWidgets.QMainWindow()
-        self.ui = Ui_Login_Win()
+        self.ui = Ui_LoginScreen()
         self.ui.setupUi(self.tela_login)
         self.tela_login.show()
         QtWidgets.QApplication.instance().activeWindow().close()
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        #MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.aluno_button.setToolTip(_translate("MainWindow", "Consulta, alteração e remoção de matriculas existentes"))
-        self.aluno_button.setText(_translate("MainWindow", "Alunos"))
-        self.nome_professor.setText(_translate("MainWindow", f"<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">{self.username}</span></p></body></html>"))
-        self.ficha_button.setToolTip(_translate("MainWindow", "Perfis individuais de alunos para exportação"))
-        self.ficha_button.setText(_translate("MainWindow", "Fichas"))
-        self.matricula_button.setToolTip(_translate("MainWindow", "Cadastro de novos alunos nas turmas"))
-        self.matricula_button.setText(_translate("MainWindow", "Matricula"))
-        self.welcome_label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt;\">Bem vindo Professor(a):</span></p></body></html>"))
-        self.LUDUS_logo.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:72pt;\">LUDUS</span></p></body></html>"))
-        self.frequencia_button.setToolTip(_translate("MainWindow", "Registros de frequências, justificativas e observações"))
-        self.frequencia_button.setText(_translate("MainWindow", "Frequência"))
+    def abrir_tela_registro(self):
+        from register_screen import Ui_RegisterUserWindow
+        self.tela_registro = QtWidgets.QMainWindow()
+        self.ui = Ui_RegisterUserWindow()
+        self.ui.setupUi(self.tela_registro)
+        self.tela_registro.show()

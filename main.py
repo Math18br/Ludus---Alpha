@@ -1,176 +1,137 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QCoreApplication, QSettings, Qt
+from PyQt6.QtWidgets import QMessageBox
 
-
-from register_screen import *
-from database import realiza_login,busca_nome_usuario
+from database import realiza_login, busca_nome_usuario
 from home_screen import Ui_MainWindow
-
 
 QCoreApplication.setOrganizationName("LUDUS")
 QCoreApplication.setApplicationName("LUDUS-App")
 settings = QSettings()
 
-class Ui_Login_Win(object):
-    def setupUi(self, Login_Win):
-        Login_Win.setObjectName("Login_Win")
-        Login_Win.resize(640, 480)
-        Login_Win.setMinimumSize(640, 480)
-        Login_Win.setMaximumSize(640, 480)
-        Login_Win.setWindowFlags(Login_Win.windowFlags() & ~Qt.WindowType.WindowMaximizeButtonHint)
-        Login_Win.setStyleSheet("background-color: rgb(243, 230, 213);")
-        self.centralwidget = QtWidgets.QWidget(parent=Login_Win)
+class Ui_LoginScreen(object):
+    def setupUi(self, LoginScreen):
+        LoginScreen.setObjectName("LoginScreen")
+        LoginScreen.resize(640, 480)
+        LoginScreen.setMinimumSize(640, 480)
+        LoginScreen.setMaximumSize(640, 480)
+        LoginScreen.setWindowFlags(LoginScreen.windowFlags() & ~Qt.WindowType.WindowMaximizeButtonHint)
+        LoginScreen.setStyleSheet("background-color: rgb(243, 230, 213);")
+        
+        self.centralwidget = QtWidgets.QWidget(parent=LoginScreen)
         self.centralwidget.setObjectName("centralwidget")
-        Login_Win.setWindowIcon(QIcon('imagens\\7.png'))
-        Login_Win.setStyleSheet("background-color: rgb(243, 230, 213);")
-        
-        self.cadastrar_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.openCadastro())
-        self.cadastrar_button.setGeometry(QtCore.QRect(200, 320, 106, 31))
-    
-        self.cadastrar_button.setStyleSheet("""
-    QPushButton {
-        background-color: rgb(45, 84, 60);
-        border-width: 2px;
-        border-radius: 10px;
-        font: bold 14px "Inter Black";
-        min-width: 90px;
-        padding: 6px;
-        color: rgb(243, 230, 213);                                  
-    }
-    QPushButton:hover {
-        background-color: rgb(65, 104, 80);
-    }
-""")
+        LoginScreen.setWindowIcon(QIcon('imagens\\7.png'))
 
-        self.cadastrar_button.setObjectName("cadastrar_button")
-        self.cadastrar_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        
-        self.login_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.logar())
-        self.login_button.setGeometry(QtCore.QRect(320, 320, 106, 31))
-
+        # Botão de Login
+        self.login_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked=self.logar)
+        self.login_button.setGeometry(QtCore.QRect(270, 320, 106, 31))
         self.login_button.setStyleSheet("""
-    QPushButton {
-        background-color: rgb(131, 3, 2);
-        border-width: 2px;
-        border-radius: 10px;
-        font: bold 14px "Inter Black";
-        min-width: 90px;
-        padding: 6px;
-        color: rgb(243, 230, 213);                                  
-    }
-    QPushButton:hover {
-        background-color: rgb(151, 23, 22);
-    }
-""")
+            QPushButton {
+                background-color: rgb(131, 3, 2);
+                border-width: 2px;
+                border-radius: 10px;
+                font: bold 14px "Inter Black";
+                min-width: 90px;
+                padding: 6px;
+                color: rgb(243, 230, 213);                                  
+            }
+            QPushButton:hover {
+                background-color: rgb(151, 23, 22);
+            }
+        """)
         self.login_button.setObjectName("login_button")
         self.login_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        
-        self.LUDUS_logo = QtWidgets.QLabel(parent=self.centralwidget)
-        self.LUDUS_logo.setGeometry(QtCore.QRect(120, 110, 405, 120))
-        
+
+        # Logo do LUDUS
+        self.ludus_logo = QtWidgets.QLabel(parent=self.centralwidget)
+        self.ludus_logo.setGeometry(QtCore.QRect(120, 110, 405, 120))
         font = QtGui.QFont()
         font.setFamily("Trend Slab Four")
         font.setPointSize(48)
-        
-        self.LUDUS_logo.setFont(font)
-        self.LUDUS_logo.setStyleSheet("color: rgb(130, 3, 0);")
-        self.LUDUS_logo.setObjectName("LUDUS_logo")
-        
-        self.senha = QtWidgets.QLineEdit(self.centralwidget)
-        self.senha.setGeometry(QtCore.QRect(170, 282, 281, 31))
-        self.senha.setStyleSheet("background-color: rgb(131, 3, 2);;\n"
-                                 "border-width: 2px;\n"
-                                 "border-radius: 10px;\n"
-                                 "font:bold 14px \"Inter Black\" ;\n"
-                                 "min-width: 90px;\n"
-                                 "padding: 6px;\n"
-                                 "color: rgb(243, 230, 213);\n"
-                                 "")
-        self.senha.setObjectName("senha")
-        self.senha.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
-        
-        self.username = QtWidgets.QLineEdit(parent=self.centralwidget)
-        self.username.setGeometry(QtCore.QRect(170, 246, 281, 31))
-        self.username.setStyleSheet("background-color: rgb(243, 230, 213);\n"
-"border-width: 1px;\n"
-"border-radius: 10px;\n"
-"border-color: black;\n"
-"border-style:outset;\n"
-"font:bold 14px \"Inter Black\" ;\n"
-"min-width: 90px;\n"
-"padding: 6px;\n"
-"color: rgb(131, 3, 2);\n"
-"")
-        self.username.setObjectName("username")
-        
-        Login_Win.setCentralWidget(self.centralwidget)
+        self.ludus_logo.setFont(font)
+        self.ludus_logo.setStyleSheet("color: rgb(130, 3, 0);")
+        self.ludus_logo.setObjectName("ludus_logo")
 
-        self.retranslateUi(Login_Win)
-        QtCore.QMetaObject.connectSlotsByName(Login_Win)
+        # Campo de senha
+        self.senha_input = QtWidgets.QLineEdit(self.centralwidget)
+        self.senha_input.setGeometry(QtCore.QRect(170, 282, 281, 31))
+        self.senha_input.setStyleSheet("""
+            background-color: rgb(131, 3, 2);
+            border-width: 2px;
+            border-radius: 10px;
+            font: bold 14px "Inter Black";
+            padding: 6px;
+            color: rgb(243, 230, 213);
+        """)
+        self.senha_input.setObjectName("senha_input")
+        self.senha_input.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
 
-    def openCadastro(self):
-        self.window=QtWidgets.QMainWindow()
-        self.ui = Ui_RegisterUserWindow()
-        self.ui.setupUi(self.window)
-        self.window.show()
-        
+        # Campo de username
+        self.username_input = QtWidgets.QLineEdit(parent=self.centralwidget)
+        self.username_input.setGeometry(QtCore.QRect(170, 246, 281, 31))
+        self.username_input.setStyleSheet("""
+            background-color: rgb(243, 230, 213);
+            border-width: 1px;
+            border-radius: 10px;
+            font: bold 14px "Inter Black";
+            padding: 6px;
+            color: rgb(131, 3, 2);
+        """)
+        self.username_input.setObjectName("username_input")
 
-    def retranslateUi(self, Login_Win):
+        LoginScreen.setCentralWidget(self.centralwidget)
+        self.retranslateUi(LoginScreen)
+        QtCore.QMetaObject.connectSlotsByName(LoginScreen)
+
+    def retranslateUi(self, LoginScreen):
         _translate = QtCore.QCoreApplication.translate
-        Login_Win.setWindowTitle(_translate("Login_Win", "LUDUS - Login"))
-        self.cadastrar_button.setText(_translate("Login_Win", "Cadastrar"))
-        self.login_button.setText(_translate("Login_Win", "Login"))
-        self.LUDUS_logo.setText(_translate("Login_Win", "<html><head/><body><p align=\"center\"><span style=\" font-size:72pt;\">LUDUS</span></p></body></html>"))
-        self.senha.setPlaceholderText(_translate("Login_Win", "Senha"))
-        self.username.setPlaceholderText(_translate("Login_Win", "Username"))
+        LoginScreen.setWindowTitle(_translate("LoginScreen", "LUDUS - Login"))
+        self.login_button.setText(_translate("LoginScreen", "Login"))
+        self.ludus_logo.setText(_translate("LoginScreen", "<html><head/><body><p align=\"center\"><span style=\" font-size:72pt;\">LUDUS</span></p></body></html>"))
+        self.senha_input.setPlaceholderText(_translate("LoginScreen", "Senha"))
+        self.username_input.setPlaceholderText(_translate("LoginScreen", "Username"))
 
     def logar(self):
-        login = self.username.text()
-        senha = self.senha.text()
+        username = self.username_input.text()
+        password = self.senha_input.text()
 
-        if realiza_login(login, senha):
-            self.exibir_mensagem_sucesso()
-            nome_usuario = busca_nome_usuario(login)
-            settings.setValue("username", nome_usuario)
-            self.abrir_tela_principal(nome_usuario)
+        if realiza_login(username, password):
+            self.show_success_message(username)
+            user_name = busca_nome_usuario(username)
+            settings.setValue("username", user_name)
+            self.open_main_window(user_name)
         else:
-            self.exibir_mensagem_erro()
+            self.show_error_message()
 
-    def get_nome_prof(self):
-        login = self.username.text()
-        nome_usuario = busca_nome_usuario(login)
-        return nome_usuario
-
-
-    def exibir_mensagem_sucesso(self):
+    def show_success_message(self, username):
         mensagem = QMessageBox()
         mensagem.setIcon(QMessageBox.Icon.Information)
-        mensagem.setText(f"Login realizado com sucesso! Bem ao LUDUS vindo: {self.username.text()}")
+        mensagem.setText(f"Login realizado com sucesso! Bem-vindo ao LUDUS, {username}")
         mensagem.setWindowTitle("Confirmação de Login")
         mensagem.setStandardButtons(QMessageBox.StandardButton.Ok)
         mensagem.exec()
-    
-    def exibir_mensagem_erro(self):
+
+    def show_error_message(self):
         mensagem = QMessageBox()
         mensagem.setIcon(QMessageBox.Icon.Information)
-        mensagem.setText("Login não foi realizado, usuário ou senha incorretos! Tente novamente")
-        mensagem.setWindowTitle("Confirmação de Login ERRO")
+        mensagem.setText("Login não realizado! Usuário ou senha incorretos. Tente novamente.")
+        mensagem.setWindowTitle("Erro de Login")
         mensagem.setStandardButtons(QMessageBox.StandardButton.Ok)
         mensagem.exec()
 
-    def abrir_tela_principal(self, nome_usuario):
-        self.window = QtWidgets.QMainWindow()
+    def open_main_window(self, user_name):
+        self.main_window = QtWidgets.QMainWindow()
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self.window, username=nome_usuario)
-        self.window.show()
+        self.ui.setupUi(self.main_window, username=user_name)
+        self.main_window.show()
         QtWidgets.QApplication.instance().activeWindow().close()
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Login_Win = QtWidgets.QMainWindow()
-    ui = Ui_Login_Win()
-    ui.setupUi(Login_Win)
-    Login_Win.show()
+    LoginScreen = QtWidgets.QMainWindow()
+    ui = Ui_LoginScreen()
+    ui.setupUi(LoginScreen)
+    LoginScreen.show()
     sys.exit(app.exec())
