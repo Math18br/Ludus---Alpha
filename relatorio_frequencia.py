@@ -46,29 +46,13 @@ class Ui_RelatorioWindow(object):
 "alternate-background-color:rgb(243, 230, 213);")
         self.turma_selection.setEditable(True)
         self.turma_selection.setObjectName("turma_selection")
-        self.turma_selection.addItem("01. Berçário I")
-        self.turma_selection.addItem("02. Berçário II")
-        self.turma_selection.addItem("03. Maternal I")
-        self.turma_selection.addItem("04. Maternal II")
-        self.turma_selection.addItem("05. Jardim I")
-        self.turma_selection.addItem("06. Jardim II")
-        self.turma_selection.addItem("07. Ciclo I - 1° Ano")
-        self.turma_selection.addItem("08. Ciclo I - 2° Ano")
-        self.turma_selection.addItem("09. Ciclo I - 3° Ano")
-        self.turma_selection.addItem("10. Ciclo II - 1° Ano")
-        self.turma_selection.addItem("11. Ciclo II - 2° Ano")
-        self.turma_selection.addItem("12. Ciclo III - 1° Ano")
-        self.turma_selection.addItem("13. Ciclo III - 2° Ano")
-        self.turma_selection.addItem("14. Ciclo IV - 1° Ano")
-        self.turma_selection.addItem("15. Ciclo IV - 2° Ano")
-        self.turma_selection.addItem("16. 1ª Totalidade")
-        self.turma_selection.addItem("17.  2ª Totalidade")
-        self.turma_selection.addItem("18.  3ª Etapa")
-        self.turma_selection.addItem("19.  4ª Etapa")
-        self.turma_selection.addItem("20. 1° Ano")
-        self.turma_selection.addItem("21. 2° Ano")
-        self.turma_selection.addItem("22. 3° Ano")
-        self.turma_selection.addItem("23. 4° Ano")
+        self.turma_selection.addItem("01. Jardim I")
+        self.turma_selection.addItem("02. Jardim II")
+        self.turma_selection.addItem("03. 1° Ano")
+        self.turma_selection.addItem("04. 2° Ano")
+        self.turma_selection.addItem("05. 3° Ano")
+        self.turma_selection.addItem("06. 4° Ano")
+        self.turma_selection.addItem("07. 5° Ano")
 
         # botao confirmar
         self.confirm_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.voltar_menu())
@@ -307,7 +291,7 @@ class Ui_RelatorioWindow(object):
                 self.tableWidget.setRowCount(len(frequencias))
                 self.tableWidget.setColumnCount(14) 
 
-                headers = ["Nome Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]] + ["Total", "Porcentagem"]
+                headers = ["Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]] + ["Total", "%"]
                 self.tableWidget.setHorizontalHeaderLabels(headers)
 
                 for row, freq in enumerate(frequencias):
@@ -316,24 +300,23 @@ class Ui_RelatorioWindow(object):
 
                         total_faltas = 0
                         for mes in range(1, 13):
-                                faltas_mes = freq[mes + 1] if len(freq) > mes + 1 else 0  # Faltas do mês
-                                self.tableWidget.setItem(row, mes + 1, QtWidgets.QTableWidgetItem(str(faltas_mes)))  # Faltas do mês
+                                faltas_mes = freq[mes + 1] if len(freq) > mes + 1 else 0
+                                self.tableWidget.setItem(row, mes + 1, QtWidgets.QTableWidgetItem(str(faltas_mes)))
                                 total_faltas += faltas_mes
                         
-                        self.tableWidget.setItem(row, 13, QtWidgets.QTableWidgetItem(str(total_faltas)))  # Total de faltas
+                        self.tableWidget.setItem(row, 13, QtWidgets.QTableWidgetItem(str(total_faltas)))
                 
                         matricula = self.tableWidget.item(row, 1).text()
                         porcentagem = self.porcentagem_mensal(ano_selecionado, matricula)
-                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(porcentagem[0]))  # Porcentagem (ou você pode calcular a porcentagem total aqui)
+                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(porcentagem[0]))
 
         else:
-                mes_selecionado_index = self.month_selection.currentIndex() + 1  # Ajustando para o índice correto
+                mes_selecionado_index = self.month_selection.currentIndex()
 
                 self.tableWidget.setRowCount(len(frequencias))
-                self.tableWidget.setColumnCount(4)  # Para Nome, Matrícula, Faltas e Porcentagem
+                self.tableWidget.setColumnCount(4)
 
-                # Configurando os headers da tabela
-                headers = ["Nome Aluno", "Matrícula", "Faltas", "Porcentagem"]
+                headers = ["Aluno", "Matrícula", "Faltas", "%"]
                 self.tableWidget.setHorizontalHeaderLabels(headers)
 
                 for row, freq in enumerate(frequencias):
@@ -341,12 +324,11 @@ class Ui_RelatorioWindow(object):
                         self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(str(freq[1])))  # matricula
 
                         matricula = self.tableWidget.item(row, 1).text()
-                        faltas_mes = freq[mes_selecionado_index + 1] if len(freq) > mes_selecionado_index + 1 else 0  # Faltas do mês selecionado
-                        porcentagem = self.porcentagem_mensal(ano_selecionado, matricula)[mes_selecionado_index - 1]  # Porcentagem do mês selecionado
+                        faltas_mes = freq[mes_selecionado_index ] if len(freq) > mes_selecionado_index + 1 else 0
+                        porcentagem = self.porcentagem_mensal(ano_selecionado, matricula)[mes_selecionado_index - 1]
 
-                        # Preenchendo a tabela com as faltas e porcentagem
-                        self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(str(faltas_mes)))  # Faltas
-                        self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(porcentagem))  # Porcentagem
+                        self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(str(faltas_mes)))
+                        self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(porcentagem))
 
 
     def porcentagem_mensal(self, ano_selecionado, matricula):

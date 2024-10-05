@@ -113,7 +113,7 @@ class UI_FrequenciaWindow(object):
         self.just_caixa.setObjectName("just_caixa")
         
         self.title_label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.title_label.setGeometry(QtCore.QRect(410, 40, 513, 84))
+        self.title_label.setGeometry(QtCore.QRect(410, 30, 513, 84))
         font = QtGui.QFont()
         font.setFamily("Trend Slab Four")
         font.setPointSize(48)
@@ -147,7 +147,7 @@ class UI_FrequenciaWindow(object):
         self.date_selection.setObjectName("date_selection")
         
         self.turma_selection = QtWidgets.QComboBox(parent=self.centralwidget)
-        self.turma_selection.setGeometry(QtCore.QRect(80, 50, 291, 41))
+        self.turma_selection.setGeometry(QtCore.QRect(80, 40, 291, 41))
         self.turma_selection.setStyleSheet("background-color:rgb(243, 230, 213);\n"
 "border-style: outset;\n"
 "border-width: 2px;\n"
@@ -159,32 +159,16 @@ class UI_FrequenciaWindow(object):
 "alternate-background-color:rgb(243, 230, 213);")
         self.turma_selection.setEditable(True)
         self.turma_selection.setObjectName("turma_selection")
-        self.turma_selection.addItem("01. Berçário I")
-        self.turma_selection.addItem("02. Berçário II")
-        self.turma_selection.addItem("03. Maternal I")
-        self.turma_selection.addItem("04. Maternal II")
-        self.turma_selection.addItem("05. Jardim I")
-        self.turma_selection.addItem("06. Jardim II")
-        self.turma_selection.addItem("07. Ciclo I - 1° Ano")
-        self.turma_selection.addItem("08. Ciclo I - 2° Ano")
-        self.turma_selection.addItem("09. Ciclo I - 3° Ano")
-        self.turma_selection.addItem("10. Ciclo II - 1° Ano")
-        self.turma_selection.addItem("11. Ciclo II - 2° Ano")
-        self.turma_selection.addItem("12. Ciclo III - 1° Ano")
-        self.turma_selection.addItem("13. Ciclo III - 2° Ano")
-        self.turma_selection.addItem("14. Ciclo IV - 1° Ano")
-        self.turma_selection.addItem("15. Ciclo IV - 2° Ano")
-        self.turma_selection.addItem("16. 1ª Totalidade")
-        self.turma_selection.addItem("17.  2ª Totalidade")
-        self.turma_selection.addItem("18.  3ª Etapa")
-        self.turma_selection.addItem("19.  4ª Etapa")
-        self.turma_selection.addItem("20. 1° Ano")
-        self.turma_selection.addItem("21. 2° Ano")
-        self.turma_selection.addItem("22. 3° Ano")
-        self.turma_selection.addItem("23. 4° Ano")
+        self.turma_selection.addItem("01. Jardim I")
+        self.turma_selection.addItem("02. Jardim II")
+        self.turma_selection.addItem("03. 1° Ano")
+        self.turma_selection.addItem("04. 2° Ano")
+        self.turma_selection.addItem("05. 3° Ano")
+        self.turma_selection.addItem("06. 4° Ano")
+        self.turma_selection.addItem("07. 5° Ano")
         
         self.refresh_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.atualizar_lista_de_frequencia())
-        self.refresh_button.setGeometry(QtCore.QRect(230, 90, 136, 41))
+        self.refresh_button.setGeometry(QtCore.QRect(240, 90, 136, 41))
         self.refresh_button.setStyleSheet("background-color: rgb(131, 3, 2);;\n"
 "border-style: outset;\n"
 "border-width: 2px;\n"
