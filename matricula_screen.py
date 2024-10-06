@@ -1528,6 +1528,8 @@ class UI_MatriculaWindow(object):
                                 raise Exception("Falha ao inserir certidão")
 
                         conn.commit()
+                        
+                        self.exibir_mensagem_sucesso()
                         print("Todos os dados foram inseridos com sucesso.")
 
                 except Exception as e:

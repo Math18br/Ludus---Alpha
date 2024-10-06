@@ -56,10 +56,15 @@ def checa_matricula(matricula):
 
 def porcentagem(presencas, mes):
 
-    if obter_total_dias(mes) != 0:
-        porcent = (int(presencas)*100)/obter_total_dias(mes)
+    if mes == 13:
+        print(f'total dias = {obter_total_dias()}')
+        print(f'presenças = {presencas}')
+        porcent = (int(presencas) * 100) / obter_total_dias()
         return porcent
-    elif obter_total_dias(mes) == 0:
+    elif obter_total_dias_mes(mes) != 0 and obter_total_dias_mes(mes) < 13:
+        porcent = (int(presencas)*100)/obter_total_dias_mes(mes)
+        return porcent
+    elif obter_total_dias_mes(mes) == 0:
         porcent = 0
         return porcent
     else:
@@ -503,7 +508,7 @@ def obter_id_aluno_por_matricula(matricula):
         if conn:
             conn.close()
 
-def obter_total_dias(mes):
+def obter_total_dias_mes(mes):
     query = "SELECT * FROM controle"
     conn = connect_db()
 
@@ -525,6 +530,32 @@ def obter_total_dias(mes):
             cur.close()
         if conn:
             conn.close()
+
+
+def obter_total_dias():
+    query = "SELECT * FROM controle"
+    conn = connect_db()
+
+    try:
+        cur = conn.cursor()
+        cur.execute(query)
+        result = cur.fetchone()
+
+        if result:
+            total_dias = sum(result[1:13])
+            return total_dias
+        else:
+            return None
+
+    except Exception as e:
+        print(f"Erro ao conectar ao banco de dados: {e}")
+        return None
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
 
 def obter_ano():
     query = "SELECT ano FROM controle ORDER BY ano DESC LIMIT 1"

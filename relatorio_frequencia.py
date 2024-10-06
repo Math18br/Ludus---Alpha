@@ -307,8 +307,12 @@ class Ui_RelatorioWindow(object):
                         self.tableWidget.setItem(row, 13, QtWidgets.QTableWidgetItem(str(total_faltas)))
                 
                         matricula = self.tableWidget.item(row, 1).text()
-                        porcentagem = self.porcentagem_mensal(ano_selecionado, matricula)
-                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(porcentagem[0]))
+                        porcentagem_mes = self.porcentagem_mensal(ano_selecionado, matricula)
+                        porcentagem_ano = self.porcentagem_anual(ano_selecionado, matricula)
+                        print(f'{porcentagem_ano}%')
+                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(porcentagem_mes[0]))
+
+
 
         else:
                 mes_selecionado_index = self.month_selection.currentIndex()
@@ -340,29 +344,47 @@ class Ui_RelatorioWindow(object):
             lista_porcentagens.append(f"{porcentagem(frequencia, i)}%")
         return lista_porcentagens
 
-    def exportar_para_csv(self):
-          nome_arquivo = 'base_relatório.csv'
-          caminho_arquivo = os.path.join(os.getcwd(),nome_arquivo)
-          headers = ["Nome Aluno", "Matricula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]]
+    def porcentagem_anual(self, ano_selecionado, matricula):
+        id_aluno = obter_id_aluno_por_matricula(matricula)
+        somatorio = 0
 
-          try:
-                modo = 'a' if os.path.exists(caminho_arquivo) else 'w'
-                with open(caminho_arquivo, modo, newline='',encoding='utf-8') as arquivo:
-                      escritor = csv.writer(arquivo)
-                      if modo == 'w':
-                            escritor.writerow(headers)
-                      for row in range(self.tableWidget.rowCount()):
-                            linha = []
-                            for col in range(self.tableWidget.columnCount()):
-                                  item = self.tableWidget.item(row, col)
-                                  if item is not None:
-                                   linha.append(item.text())
-                                  else:
-                                        linha.append('')
-                            escritor.writerow(linha)
-                self.mostrar_mensagem_sucesso('Dados exportados com sucesso para CSV')
-          except Exception as e:
-                self.mostrar_mensagem_erro(f"Erro ao exportar dados: {e}")
+        for i in range(1, 13):
+            frequencia = obter_frequencias_por_aluno(id_aluno, ano_selecionado, i)
+            somatorio += frequencia
+        porcent_ano = porcentagem(somatorio, 13)
+
+        return porcent_ano
+
+    def exportar_para_csv(self):
+        nome_arquivo = 'base_relatório.csv'
+        pasta_arquivos = os.path.join(os.getcwd(), 'arquivos salvos')
+
+        if not os.path.exists(pasta_arquivos):
+            os.makedirs(pasta_arquivos)
+
+        caminho_arquivo = os.path.join(pasta_arquivos, nome_arquivo)
+        headers = ["Nome Aluno", "Matricula"] + [f"{mes}" for mes in
+                                                 ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out",
+                                                  "Nov", "Dez"]]
+
+        try:
+            modo = 'a' if os.path.exists(caminho_arquivo) else 'w'
+            with open(caminho_arquivo, modo, newline='', encoding='utf-8') as arquivo:
+                escritor = csv.writer(arquivo)
+                if modo == 'w':
+                    escritor.writerow(headers)
+                for row in range(self.tableWidget.rowCount()):
+                    linha = []
+                    for col in range(self.tableWidget.columnCount()):
+                        item = self.tableWidget.item(row, col)
+                        if item is not None:
+                            linha.append(item.text())
+                        else:
+                            linha.append('')
+                    escritor.writerow(linha)
+            self.mostrar_mensagem_sucesso('Dados exportados com sucesso para CSV')
+        except Exception as e:
+            self.mostrar_mensagem_erro(f"Erro ao exportar dados: {e}")
      
     def mostrar_mensagem_sucesso(self, mensagem):
                 alerta = QMessageBox()

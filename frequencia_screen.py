@@ -2,7 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtGui import QIcon
-from database import * #listar_alunos_por_turma, realiza_freq, obter_id_aluno_por_matricula, obter_total_dias
+from database import *
 from criar_excel import adicionar_dados_excel
 from datetime import date
 
@@ -232,7 +232,7 @@ class UI_FrequenciaWindow(object):
                 item = self.lista_freq.item(index)
                 matricula, nome_aluno = item.text().split(' - ')
                 id_aluno = obter_id_aluno_por_matricula(matricula)
-                total = obter_total_dias(mes)
+                total = obter_total_dias_mes(mes)
                 if id_aluno:
                         estado_presenca = 'P' if item.checkState() == Qt.CheckState.Checked else 'A'
                         realiza_freq(id_aluno, nome_aluno, matricula, data_presenca, estado_presenca, justificativa, observacoes)
