@@ -667,10 +667,3 @@ def busca_nome_usuario(login):
         return resultado[0] 
     else:
         return None
-
-def diario_classe():
-    query = f"SELECT justificativa, observacoes FROM frequencia WHERE data_presenca = '{data}'"
-        
-    # Aqui você executaria a query no banco de dados e atualizaria a text_area com os resultados
-    justificativas, observacoes = executar_query(conn, query, parametros)
-    self.text_area.setText(f"Justificativas: {justificativas}\nObservações: {observacoes}")
