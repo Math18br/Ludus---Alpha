@@ -136,15 +136,47 @@ def executar_query_matricula(query, parametros):
         cur.close()
         conn.close()
 
+def executar_query_diarioClasse(query, parametros):
+    conn = connect_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query, (parametros,))
+            result = cur.fetchall()
+            return result
+    except psycopg2.Error as e:
+        print(f"Falha ao executar query: {str(e)}")
+        return None
+    finally:
+        conn.close()
+    
+def atualizar_diario_classe(data):
+    query = """
+    SELECT 
+        string_agg(justificativa, ', ') AS justificativas,
+        string_agg(observacoes, ', ') AS observacoes 
+    FROM 
+        frequencia 
+    WHERE 
+        data_presenca = %s
+    """
+
+    resultados = executar_query_diarioClasse(query, (data,))
+
+    if resultados and resultados[0]:
+        justificativas, observacoes = resultados[0]
+        return f"Justificativas: {justificativas}\nObservações: {observacoes}"
+    else:
+        return "Nenhum dado encontrado para a data selecionada."
+
 
 #endregion
 
 #region INSERTS
 def insert_cadastro_sistema(login,nome_prof,senha):
 
-    print(login)
-    print(nome_prof)
-    print(senha)
+    #print(login)
+    #print(nome_prof)
+    #print(senha)
 
     query = """INSERT INTO usuarios (login, nome_professor, senha) VALUES (%s, %s, %s)"""
 
@@ -635,3 +667,10 @@ def busca_nome_usuario(login):
         return resultado[0] 
     else:
         return None
+
+def diario_classe():
+    query = f"SELECT justificativa, observacoes FROM frequencia WHERE data_presenca = '{data}'"
+        
+    # Aqui você executaria a query no banco de dados e atualizaria a text_area com os resultados
+    justificativas, observacoes = executar_query(conn, query, parametros)
+    self.text_area.setText(f"Justificativas: {justificativas}\nObservações: {observacoes}")

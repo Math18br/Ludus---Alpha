@@ -120,6 +120,8 @@ class UI_FrequenciaWindow(object):
         self.title_label.setFont(font)
         self.title_label.setStyleSheet("color: rgb(130, 3, 0);")
         self.title_label.setObjectName("title_label")
+
+        
         self.date_selection = QtWidgets.QDateEdit(parent=self.centralwidget)
         self.date_selection.setDate(date.today())
         self.date_selection.setGeometry(QtCore.QRect(80, 90, 151, 41))

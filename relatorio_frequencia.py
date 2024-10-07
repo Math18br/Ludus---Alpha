@@ -2,13 +2,14 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-from database import * #listar_frequencias_por_turma_ano, porcentagem, obter_id_aluno_por_matricula, obter_frequencias_por_aluno
+from database import *
+from diario_classe import *
 import csv
 import os
 
-
 class Ui_RelatorioWindow(object):
     def setupUi(self, MainWindow):
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(1280, 720)
@@ -19,14 +20,16 @@ class Ui_RelatorioWindow(object):
 "")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setStyleSheet("background-color: rgb(243, 230, 213);")
+
+        # título
         self.title_label = QtWidgets.QLabel(parent=self.centralwidget)
         self.title_label.setGeometry(QtCore.QRect(400, 0, 513, 161))
         font = QtGui.QFont()
         font.setFamily("Trend Slab Four")
         font.setPointSize(48)
         self.title_label.setFont(font)
-        #self.title_label.setStyleSheet("color: rgb(44, 46, 89);\n"
-#"text-stroke: 4px black;")
+        self.title_label.setStyleSheet("color: rgb(44, 46, 89);")
         MainWindow.setWindowIcon(QIcon('imagens\\3.png'))
         MainWindow.setStyleSheet("background-color: rgb(243, 230, 213);")
         self.title_label.setWordWrap(True)
@@ -54,11 +57,11 @@ class Ui_RelatorioWindow(object):
         self.turma_selection.addItem("06. 4° Ano")
         self.turma_selection.addItem("07. 5° Ano")
 
-        # botao confirmar
-        self.confirm_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.voltar_menu())
-        self.confirm_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
-        self.confirm_button.setGeometry(QtCore.QRect(1076, 20, 136, 71))
-        self.confirm_button.setStyleSheet("background-color:rgb(44, 46, 89);\n"
+        # botao diario de classe
+        self.diario_classe_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.abrir_diario_classe())
+        self.diario_classe_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.diario_classe_button.setGeometry(QtCore.QRect(1076, 20, 136, 71))
+        self.diario_classe_button.setStyleSheet("background-color:rgb(44, 46, 89);\n"
 "border-style: outset;\n"
 "border-width: 2px;\n"
 "border-radius: 10px;\n"
@@ -68,7 +71,7 @@ class Ui_RelatorioWindow(object):
 "padding: 6px;\n"
 "color: rgb(243, 230, 213);\n"
 "")
-        self.confirm_button.setObjectName("confirm_button")
+        self.diario_classe_button.setObjectName("diario_classe_button")
 
         #table
         self.tableWidget = QtWidgets.QTableWidget(parent=self.centralwidget)
@@ -127,11 +130,12 @@ class Ui_RelatorioWindow(object):
         self.tableWidget.setHorizontalHeaderItem(13, item)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget.setItem(0, 0, item)
+
         for row in range(self.tableWidget.rowCount()):
                 self.tableWidget.setRowHeight(row, 30)
 
         for col in range(self.tableWidget.columnCount()):
-                self.tableWidget.setColumnWidth(col, 70)
+                self.tableWidget.setColumnWidth(col, 68)
 
         #data
         self.date_selection = QtWidgets.QDateEdit(parent=self.centralwidget)
@@ -204,6 +208,7 @@ class Ui_RelatorioWindow(object):
 "color: rgb(44, 46, 89);")
         self.cancel_button.setObjectName("cancel_button")
         self.cancel_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        
         self.refresh_button_2 = QtWidgets.QPushButton(parent=self.centralwidget, clicked=self.exportar_para_csv)
         self.refresh_button_2.setGeometry(QtCore.QRect(930, 100, 281, 41))
         self.refresh_button_2.setStyleSheet("background-color: rgb(44, 46, 89);\n"
@@ -229,7 +234,8 @@ class Ui_RelatorioWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "Relatorio das Frequências"))
         self.title_label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Relatorio de classe</p></body></html>"))
 
-        self.confirm_button.setText(_translate("MainWindow", "Confirmar"))
+        self.diario_classe_button.setText(_translate("MainWindow", "Diário de \nClasse"))
+
         self.tableWidget.setSortingEnabled(True)
         item = self.tableWidget.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
@@ -289,9 +295,9 @@ class Ui_RelatorioWindow(object):
         
         if mes_selecionado == "Anual":
                 self.tableWidget.setRowCount(len(frequencias))
-                self.tableWidget.setColumnCount(14) 
+                self.tableWidget.setColumnCount(16) 
 
-                headers = ["Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]] + ["Total", "%"]
+                headers = ["Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]] + ["Total Faltas", "%"]
                 self.tableWidget.setHorizontalHeaderLabels(headers)
 
                 for row, freq in enumerate(frequencias):
@@ -300,19 +306,16 @@ class Ui_RelatorioWindow(object):
 
                         total_faltas = 0
                         for mes in range(1, 13):
-                                faltas_mes = freq[mes + 1] if len(freq) > mes + 1 else 0
+                                faltas_mes = freq[mes] if len(freq) > mes else 0
                                 self.tableWidget.setItem(row, mes + 1, QtWidgets.QTableWidgetItem(str(faltas_mes)))
                                 total_faltas += faltas_mes
                         
-                        self.tableWidget.setItem(row, 13, QtWidgets.QTableWidgetItem(str(total_faltas)))
+                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(str(total_faltas)))
                 
                         matricula = self.tableWidget.item(row, 1).text()
-                        porcentagem_mes = self.porcentagem_mensal(ano_selecionado, matricula)
                         porcentagem_ano = self.porcentagem_anual(ano_selecionado, matricula)
-                        print(f'{porcentagem_ano}%')
-                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(porcentagem_mes[0]))
-
-
+                        #print(f'{porcentagem_ano}%')
+                        self.tableWidget.setItem(row, 15, QtWidgets.QTableWidgetItem(f"{round(porcentagem_ano,2)}%"))
 
         else:
                 mes_selecionado_index = self.month_selection.currentIndex()
@@ -354,6 +357,13 @@ class Ui_RelatorioWindow(object):
         porcent_ano = porcentagem(somatorio, 13)
 
         return porcent_ano
+    
+    def abrir_diario_classe(self):
+        self.diarioWindow = QtWidgets.QMainWindow()
+        self.ui = Ui_DiarioWindow()
+        self.ui.setupUi(self.diarioWindow)
+        self.diarioWindow.show()
+
 
     def exportar_para_csv(self):
         nome_arquivo = 'base_relatório.csv'
