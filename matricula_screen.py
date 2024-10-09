@@ -36,6 +36,9 @@ class UI_MatriculaWindow(object):
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout()
         self.verticalLayout_4.setObjectName("verticalLayout_4")
+
+        # ID ALUNO
+
         self.id_aluno = QtWidgets.QGroupBox(parent=self.scrollAreaWidgetContents_2)
         self.id_aluno.setEnabled(True)
         font = QtGui.QFont()
@@ -45,6 +48,9 @@ class UI_MatriculaWindow(object):
         self.id_aluno.setObjectName("id_aluno")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.id_aluno)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+
+        # NOME ALUNO
+
         self.nome_aluno = QtWidgets.QLineEdit(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -72,6 +78,8 @@ class UI_MatriculaWindow(object):
         cpf_regex = QRegularExpression("^\\d{11}$")
         cpf_validador = QRegularExpressionValidator(cpf_regex)
 
+        # NIS
+
         self.codigo_NIS = QtWidgets.QLineEdit(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -94,6 +102,36 @@ class UI_MatriculaWindow(object):
         self.codigo_NIS.setObjectName("codigo_NIS")
         self.codigo_NIS.setValidator(validador)
         self.verticalLayout_3.addWidget(self.codigo_NIS)
+
+        # ID do aluno INEP
+
+        self.codigo_INEP = QtWidgets.QLineEdit(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.codigo_INEP.setFont(font)
+        self.codigo_INEP.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+        "border-style: outset;\n"
+        "border-width: 1px;\n"
+        "border-radius: 2px;\n"
+        "border-color:  rgb(45, 84, 60);\n"
+        "font: 12px \"Inter Medium\" ;\n"
+        "color: black;")
+        self.codigo_INEP.setMaxLength(11) 
+        self.codigo_INEP.setClearButtonEnabled(True)
+        self.codigo_INEP.setObjectName("codigo_INEP")
+
+        validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[0-9]{11}"), self.codigo_INEP)
+        self.codigo_INEP.setValidator(validator)
+        self.codigo_INEP.setPlaceholderText("Digite o ID do aluno INEP")
+
+        self.verticalLayout_3.addWidget(self.codigo_INEP)
+
+        # RAÇA
+
         self.label_id_racial = QtWidgets.QLabel(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -132,6 +170,9 @@ class UI_MatriculaWindow(object):
         self.sel_id_racial.addItem("")
         self.sel_id_racial.addItem("")
         self.verticalLayout_3.addWidget(self.sel_id_racial)
+
+        # SEXO
+        
         self.label_sexo = QtWidgets.QLabel(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -167,6 +208,8 @@ class UI_MatriculaWindow(object):
         self.sel_sexo.addItem("")
         self.sel_sexo.addItem("")
         self.verticalLayout_3.addWidget(self.sel_sexo)
+        
+        # NASCIMENTO - DATA
 
         self.nascimento_uf = QtWidgets.QLineEdit(parent=self.id_aluno)
         font = QtGui.QFont()
@@ -214,6 +257,72 @@ class UI_MatriculaWindow(object):
         self.nascimento_municipio.setClearButtonEnabled(False)
         self.nascimento_municipio.setObjectName("nascimento_municipio")
         self.verticalLayout_3.addWidget(self.nascimento_municipio)
+
+        # Campo para Nacionalidade
+
+        self.nacionalidade = QtWidgets.QLineEdit(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.nacionalidade.setFont(font)
+        self.nacionalidade.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+        "border-style: outset;\n"
+        "border-width: 1px;\n"
+        "border-radius: 2px;\n"
+        "border-color:  rgb(45, 84, 60);\n"
+        "font: 12px \"Inter Medium\" ;\n"
+        "color: black\n"
+        "\n"
+        "")
+        self.nacionalidade.setMaxLength(30)
+        self.nacionalidade.setClearButtonEnabled(False)
+        self.nacionalidade.setPlaceholderText("Nacionalidade")
+        self.nacionalidade.setObjectName("nacionalidade")
+        self.verticalLayout_3.addWidget(self.nacionalidade)
+
+        # Campo para Tipo de Nascimento
+
+        self.tipo_nascimento = QtWidgets.QLineEdit(parent=self.id_aluno)
+        self.tipo_nascimento.setFont(font)
+        self.tipo_nascimento.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+        "border-style: outset;\n"
+        "border-width: 1px;\n"
+        "border-radius: 2px;\n"
+        "border-color:  rgb(45, 84, 60);\n"
+        "font: 12px \"Inter Medium\" ;\n"
+        "color: black\n"
+        "\n"
+        "")
+        self.tipo_nascimento.setMaxLength(30)
+        self.tipo_nascimento.setClearButtonEnabled(False)
+        self.tipo_nascimento.setPlaceholderText("Tipo de Nascimento")
+        self.tipo_nascimento.setObjectName("tipo_nascimento")
+        self.verticalLayout_3.addWidget(self.tipo_nascimento)
+
+        # Campo para Data de Nascimento
+
+        self.data_nascimento = QtWidgets.QDateEdit(parent=self.id_aluno)
+        #self.label_data_nascimento.setText("Data de Nascimento:")
+        self.data_nascimento.setFont(font)
+        self.data_nascimento.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+        "border-style: outset;\n"
+        "border-width: 1px;\n"
+        "border-radius: 2px;\n"
+        "border-color:  rgb(45, 84, 60);\n"
+        "font: 12px \"Inter Medium\" ;\n"
+        "color: black\n"
+        "\n"
+        "")
+        self.data_nascimento.setCalendarPopup(True)
+        self.data_nascimento.setDate(QtCore.QDate.currentDate())
+        self.data_nascimento.setObjectName("data_nascimento")
+        self.verticalLayout_3.addWidget(self.data_nascimento)
+
+        # Certidao
+
         self.label_certidao_civil = QtWidgets.QLabel(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -1396,11 +1505,11 @@ class UI_MatriculaWindow(object):
         self.nome_aluno.setPlaceholderText(_translate("MainWindow", "Nome do Aluno"))
         self.codigo_NIS.setPlaceholderText(_translate("MainWindow", "NIS"))
         self.label_id_racial.setText(_translate("MainWindow", "Identidade Racial"))
-        self.sel_id_racial.setItemText(0, _translate("MainWindow", "Branca"))
-        self.sel_id_racial.setItemText(1, _translate("MainWindow", "Preta"))
-        self.sel_id_racial.setItemText(2, _translate("MainWindow", "Parda"))
-        self.sel_id_racial.setItemText(3, _translate("MainWindow", "Amarela"))
-        self.sel_id_racial.setItemText(4, _translate("MainWindow", "Indígena"))
+        self.sel_id_racial.setItemText(0, _translate("MainWindow", "1- Branca"))
+        self.sel_id_racial.setItemText(1, _translate("MainWindow", "2- Preta"))
+        self.sel_id_racial.setItemText(2, _translate("MainWindow", "3- Parda"))
+        self.sel_id_racial.setItemText(3, _translate("MainWindow", "4- Amarela"))
+        self.sel_id_racial.setItemText(4, _translate("MainWindow", "5- Indígena"))
         self.sel_id_racial.setItemText(5, _translate("MainWindow", "N/A"))
         self.label_sexo.setText(_translate("MainWindow", "Sexo*"))
         self.sel_sexo.setItemText(0, _translate("MainWindow", "Masculino"))
