@@ -16,6 +16,12 @@ CREATE TABLE identificacao_aluno (
 	aluno_raca varchar(50)
 );
 
+ALTER TABLE identificacao_aluno 
+ADD COLUMN data_nascimento DATE,
+ADD COLUMN tipo_nascimento VARCHAR(2),
+ADD COLUMN nacionalidade VARCHAR(30),
+ADD COLUMN codigo_INEP VARCHAR(14);
+
 CREATE TABLE certidao (
 	id_certidao SERIAL PRIMARY KEY,
     id_aluno INT,
@@ -71,6 +77,9 @@ CREATE TABLE dados_pais_responsavel (
     FOREIGN KEY (id_aluno) REFERENCES identificacao_aluno(id_aluno)
 );
 
+ALTER TABLE dados_pais_responsavel 
+ADD COLUMN responsavel VARCHAR(255);
+
 CREATE TABLE informacoes_matricula (
 	id_informacoes_matricula SERIAL PRIMARY KEY,
     id_aluno INT,
@@ -89,6 +98,10 @@ CREATE TABLE informacoes_matricula (
 );
 
 ALTER TABLE informacoes_matricula ADD COLUMN ano_letivo INT;
+
+ALTER TABLE informacoes_matricula 
+ADD COLUMN codigo_aluno VARCHAR(20),
+ADD COLUMN documento_pendente BOOLEAN;
 
 CREATE TABLE frequencia (
     id_frequencia SERIAL PRIMARY KEY,

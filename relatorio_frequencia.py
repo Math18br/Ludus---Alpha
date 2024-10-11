@@ -292,50 +292,58 @@ class Ui_RelatorioWindow(object):
         mes_selecionado = self.month_selection.currentText()
 
         frequencias = listar_frequencias_por_turma_ano(codigo_serie, ano_selecionado)
-        
+
         if mes_selecionado == "Anual":
-                self.tableWidget.setRowCount(len(frequencias))
-                self.tableWidget.setColumnCount(16) 
+            self.tableWidget.setRowCount(len(frequencias))
+            self.tableWidget.setColumnCount(16)  # 12 meses + Nome + Matrícula + Total Faltas + %
 
-                headers = ["Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]] + ["Total Faltas", "%"]
-                self.tableWidget.setHorizontalHeaderLabels(headers)
+            headers = ["Aluno", "Matrícula"] + [f"{mes}" for mes in ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]] + ["Total Faltas", "%"]
+            self.tableWidget.setHorizontalHeaderLabels(headers)
 
-                for row, freq in enumerate(frequencias):
-                        self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(freq[0])))  # nome
-                        self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(str(freq[1])))  # matricula
+            for row, freq in enumerate(frequencias):
+                self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(freq[0])))  # Nome
+                self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(str(freq[1])))  # Matrícula
 
-                        total_faltas = 0
-                        for mes in range(1, 13):
-                                faltas_mes = freq[mes] if len(freq) > mes else 0
-                                self.tableWidget.setItem(row, mes + 1, QtWidgets.QTableWidgetItem(str(faltas_mes)))
-                                total_faltas += faltas_mes
-                        
-                        self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(str(total_faltas)))
+                total_faltas = 0
+                # Iterar sobre os meses (assumindo que as faltas mensais começam no índice 2)
+                for mes in range(1, 13):
+                    faltas_mes = freq[mes + 1] if len(freq) > mes + 1 else 0  # Ajustando o índice corretamente
+                    self.tableWidget.setItem(row, mes + 1, QtWidgets.QTableWidgetItem(str(faltas_mes)))
+                    total_faltas += faltas_mes
                 
-                        matricula = self.tableWidget.item(row, 1).text()
-                        porcentagem_ano = self.porcentagem_anual(ano_selecionado, matricula)
-                        #print(f'{porcentagem_ano}%')
-                        self.tableWidget.setItem(row, 15, QtWidgets.QTableWidgetItem(f"{round(porcentagem_ano,2)}%"))
+                self.tableWidget.setItem(row, 14, QtWidgets.QTableWidgetItem(str(total_faltas)))
+                
+                matricula = self.tableWidget.item(row, 1).text()
+                porcentagem_ano = self.porcentagem_anual(ano_selecionado, matricula)
+                self.tableWidget.setItem(row, 15, QtWidgets.QTableWidgetItem(f"{round(porcentagem_ano, 2)}%"))
 
         else:
-                mes_selecionado_index = self.month_selection.currentIndex()
+            mes_selecionado_index = self.month_selection.currentIndex()
 
-                self.tableWidget.setRowCount(len(frequencias))
-                self.tableWidget.setColumnCount(4)
+            self.tableWidget.setRowCount(len(frequencias))
+            self.tableWidget.setColumnCount(4)
 
-                headers = ["Aluno", "Matrícula", "Faltas", "%"]
-                self.tableWidget.setHorizontalHeaderLabels(headers)
+            headers = ["Aluno", "Matrícula", "Faltas", "%"]
+            self.tableWidget.setHorizontalHeaderLabels(headers)
 
-                for row, freq in enumerate(frequencias):
-                        self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(freq[0])))  # nome
-                        self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(str(freq[1])))  # matricula
+            for row, freq in enumerate(frequencias):
+                self.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(freq[0])))  # nome
+                self.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(str(freq[1])))  # matricula
 
-                        matricula = self.tableWidget.item(row, 1).text()
-                        faltas_mes = freq[mes_selecionado_index ] if len(freq) > mes_selecionado_index + 1 else 0
-                        porcentagem = self.porcentagem_mensal(ano_selecionado, matricula)[mes_selecionado_index - 1]
+                matricula = self.tableWidget.item(row, 1).text()
+                faltas_mes = freq[mes_selecionado_index + 1 ] if len(freq) > mes_selecionado_index + 1 else 0 # e o indice das faltas
+                porcentagem = self.porcentagem_mensal(ano_selecionado, matricula)
 
-                        self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(str(faltas_mes)))
-                        self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(porcentagem))
+                if mes_selecionado_index - 1 < len(porcentagem):
+                    porcentagem = porcentagem[mes_selecionado_index - 1] # testar os indices das porcentagens
+
+                try:
+                    porcentagem_float = float(porcentagem.strip('%'))
+                except ValueError:
+                    porcentagem_float = 0.0
+
+                self.tableWidget.setItem(row, 2, QtWidgets.QTableWidgetItem(str(faltas_mes)))
+                self.tableWidget.setItem(row, 3, QtWidgets.QTableWidgetItem(f"{round(porcentagem_float, 2)}%"))
 
 
     def porcentagem_mensal(self, ano_selecionado, matricula):

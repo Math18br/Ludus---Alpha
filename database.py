@@ -57,8 +57,8 @@ def checa_matricula(matricula):
 def porcentagem(presencas, mes):
 
     if mes == 13:
-        print(f'total dias = {obter_total_dias()}')
-        print(f'presenças = {presencas}')
+        #print(f'total dias = {obter_total_dias()}')
+        #print(f'presenças = {presencas}')
         porcent = (int(presencas) * 100) / obter_total_dias()
         return porcent
     elif obter_total_dias_mes(mes) != 0 and obter_total_dias_mes(mes) < 13:
@@ -186,18 +186,21 @@ def insert_cadastro_sistema(login,nome_prof,senha):
 
 def insert_identificacao_aluno(conn, nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
                                cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade,
-                               orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio):
+                               orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio,
+                               data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP):
     query = """
         INSERT INTO identificacao_aluno 
         (NIS, nome_aluno, sexo, UF, local_nascimento_municipio,
          uf_cartorio, nome_cartorio, identidade_docEstrangeiro_passaporte, data_expedicao_identidade,
-         orgao_emissor, uf_identidade, cpf, aluno_raca, municipio_cartorio)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+         orgao_emissor, uf_identidade, cpf, aluno_raca, municipio_cartorio,
+         data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id_aluno;
     """
     parametros = (nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
                   cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade,
-                  orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio)
+                  orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio,
+                  data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP)
     
     cur = conn.cursor()
     cur.execute(query, parametros)
@@ -245,36 +248,28 @@ def insert_endereco(conn, id_aluno, endereco, complemento, numero_endereco, muni
     return executar_query(conn, query, parametros)
 
 
-def insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai):
+def insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai, responsavel):
     query = """
         INSERT INTO dados_pais_responsavel 
-        (id_aluno, nome_mae, nome_pai)
-        VALUES (%s, %s, %s)
+        (id_aluno, nome_mae, nome_pai, responsavel)
+        VALUES (%s, %s, %s, %s)
     """
-    parametros = (id_aluno, nome_mae, nome_pai)
+    parametros = (id_aluno, nome_mae, nome_pai, responsavel)
     return executar_query(conn, query, parametros)
 
 
 def insert_informacoes_matricula(conn, id_aluno, nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula,
-                                 codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo):
+                                 codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente):
     query = """
         INSERT INTO informacoes_matricula
-        (id_aluno, nome_escola, cod_censo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        (id_aluno, nome_escola, cod_censo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     parametros = (id_aluno, nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula,
-                  codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo)
+                  codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
     
     return executar_query(conn, query, parametros)
 
-def insert_solicitacao_matricula(nome_aluno, matricula, codigo_turma, turno, codigo_serie, ano_letivo, documentos_pendentes):
-    query = """
-        INSERT INTO solicitacao_matricula
-        (id_aluno, nome_aluno, matricula, codigo_turma, turno, codigo_serie, ano_letivo, documentos_pendentes)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-    """
-    parametros = (last_id(), nome_aluno, matricula, codigo_turma, turno, codigo_serie, ano_letivo, documentos_pendentes)
-    return executar_query_freq(query, parametros)
 
 def insert_controle(ano):
     dia_zero = 0

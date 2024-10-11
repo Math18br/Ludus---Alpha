@@ -120,7 +120,7 @@ class UI_MatriculaWindow(object):
         "border-color:  rgb(45, 84, 60);\n"
         "font: 12px \"Inter Medium\" ;\n"
         "color: black;")
-        self.codigo_INEP.setMaxLength(11) 
+        self.codigo_INEP.setMaxLength(12) 
         self.codigo_INEP.setClearButtonEnabled(True)
         self.codigo_INEP.setObjectName("codigo_INEP")
 
@@ -296,26 +296,38 @@ class UI_MatriculaWindow(object):
         "color: black\n"
         "\n"
         "")
-        self.tipo_nascimento.setMaxLength(30)
+        self.tipo_nascimento.setMaxLength(2)
         self.tipo_nascimento.setClearButtonEnabled(False)
         self.tipo_nascimento.setPlaceholderText("Tipo de Nascimento")
         self.tipo_nascimento.setObjectName("tipo_nascimento")
         self.verticalLayout_3.addWidget(self.tipo_nascimento)
 
-        # Campo para Data de Nascimento
+        # Data de Nascimento
+
+        self.label_data_nascimento = QtWidgets.QLabel("Data de Nascimento:", parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(7)
+        self.label_data_nascimento.setFont(font)
+        self.label_data_nascimento.setStyleSheet("color: rgb(45, 84, 60);\n"
+"font: 57 10pt \"Inter Medium\";")
+        self.label_data_nascimento.setObjectName("label_data_nascimento")
+        self.verticalLayout_3.addWidget(self.label_data_nascimento)
 
         self.data_nascimento = QtWidgets.QDateEdit(parent=self.id_aluno)
-        #self.label_data_nascimento.setText("Data de Nascimento:")
         self.data_nascimento.setFont(font)
         self.data_nascimento.setStyleSheet("background-color: rgb(243, 230, 213); \n"
-        "border-style: outset;\n"
-        "border-width: 1px;\n"
-        "border-radius: 2px;\n"
-        "border-color:  rgb(45, 84, 60);\n"
-        "font: 12px \"Inter Medium\" ;\n"
-        "color: black\n"
-        "\n"
-        "")
+                                        "border-style: outset;\n"
+                                        "border-width: 1px;\n"
+                                        "border-radius: 2px;\n"
+                                        "border-color: rgb(45, 84, 60);\n"
+                                        "font: 12px \"Inter Medium\" ;\n"
+                                        "color: black\n"
+                                        "\n"
+                                        "")
         self.data_nascimento.setCalendarPopup(True)
         self.data_nascimento.setDate(QtCore.QDate.currentDate())
         self.data_nascimento.setObjectName("data_nascimento")
@@ -903,6 +915,8 @@ class UI_MatriculaWindow(object):
         self.data_matricula.setCalendarPopup(True)
         self.data_matricula.setObjectName("data_matricula")
         self.gridLayout_5.addWidget(self.data_matricula, 1, 4, 1, 2)
+
+
         self.matricula = QtWidgets.QLineEdit(parent=self.InformacoesdeMatricula)
         self.matricula.setMinimumSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
@@ -936,6 +950,8 @@ class UI_MatriculaWindow(object):
         self.data_matricula_label.setWordWrap(True)
         self.data_matricula_label.setObjectName("data_matricula_label")
         self.gridLayout_5.addWidget(self.data_matricula_label, 1, 2, 1, 2)
+
+
         self.data_ingresso_label = QtWidgets.QLabel(parent=self.InformacoesdeMatricula)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -955,6 +971,41 @@ class UI_MatriculaWindow(object):
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
+
+        # código do aluno
+
+        self.codigo_aluno = QtWidgets.QLineEdit(parent=self.groupBox)
+        self.codigo_aluno.setMinimumSize(QtCore.QSize(0, 0))
+        self.codigo_aluno.setFont(font)
+        self.codigo_aluno.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                        "border-style: outset;\n"
+                                        "border-width: 1px;\n"
+                                        "border-radius: 2px;\n"
+                                        "border-color: rgb(45, 84, 60);\n"
+                                        "font: 12px \"Inter Medium\" ;\n"
+                                        "color: black;")
+        self.codigo_aluno.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDigitsOnly)
+        self.codigo_aluno.setMaxLength(20)
+        self.codigo_aluno.setClearButtonEnabled(True)
+        self.codigo_aluno.setObjectName("codigo_aluno")
+        self.codigo_aluno.setPlaceholderText("Código do Aluno")
+        self.verticalLayout_5.addWidget(self.codigo_aluno)
+
+        # Documento Pendente?
+        self.checkbox_documento_pendente = QtWidgets.QCheckBox("Documento Pendente?", parent=self.groupBox)
+        self.checkbox_documento_pendente.setObjectName("checkbox_documento_pendente")
+        self.checkbox_documento_pendente.setStyleSheet("\n"
+        "font: 12px \"Inter Medium\" ;\n"
+        "color: black\n"
+        "\n"
+        "")
+        self.verticalLayout_5.addWidget(self.checkbox_documento_pendente)
+
+        self.gridLayout_5.addWidget(self.codigo_aluno, 6, 0, 1, 3)
+        self.gridLayout_5.addWidget(self.checkbox_documento_pendente, 6, 5, 1, 1)
+
+        # pai
+
         self.nome_pai = QtWidgets.QLineEdit(parent=self.groupBox)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -976,6 +1027,9 @@ class UI_MatriculaWindow(object):
         self.nome_pai.setClearButtonEnabled(True)
         self.nome_pai.setObjectName("nome_pai")
         self.verticalLayout_5.addWidget(self.nome_pai)
+
+        # mae
+
         self.nome_mae = QtWidgets.QLineEdit(parent=self.groupBox)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -997,6 +1051,32 @@ class UI_MatriculaWindow(object):
         self.nome_mae.setClearButtonEnabled(True)
         self.nome_mae.setObjectName("nome_mae")
         self.verticalLayout_5.addWidget(self.nome_mae)
+
+        # responsavel
+
+        self.responsavel = QtWidgets.QLineEdit(parent=self.groupBox)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.responsavel.setFont(font)
+        self.responsavel.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+"border-style: outset;\n"
+"border-width: 1px;\n"
+"border-radius: 2px;\n"
+"border-color:  rgb(45, 84, 60);\n"
+"font: 12px \"Inter Medium\" ;\n"
+"color: black\n"
+"\n"
+"")
+        self.responsavel.setMaxLength(255)
+        self.responsavel.setClearButtonEnabled(True)
+        self.responsavel.setObjectName("responsavel")
+        self.responsavel.setPlaceholderText("Responsável")
+        self.verticalLayout_5.addWidget(self.responsavel)
+
         self.verticalLayout_6.addWidget(self.groupBox)
         self.frame = QtWidgets.QFrame(parent=self.scrollAreaWidgetContents_2)
         font = QtGui.QFont()
@@ -1637,20 +1717,19 @@ class UI_MatriculaWindow(object):
                                 raise Exception("Falha ao inserir certidão")
 
                         conn.commit()
-                        
+
                         self.exibir_mensagem_sucesso()
                         print("Todos os dados foram inseridos com sucesso.")
 
                 except Exception as e:
                         print(f"Erro durante a matrícula: {e}")
                         conn.rollback()
+                        self.exibir_mensagem_erro(str(e))
 
                 finally:
                         conn.close()
         else:
                 print("Não foi possível conectar ao banco de dados.")
-
-
 
 
     def insert_identificacao_aluno_ui(self, conn):
@@ -1670,24 +1749,30 @@ class UI_MatriculaWindow(object):
                 cpf = self.cpf_aluno.text()
                 info_documentos = self.documento_tipo.text()
 
+                # Novos campos
+                data_nascimento = self.data_nascimento.date().toString("yyyy-MM-dd")
+                tipo_nascimento = self.tipo_nascimento.text()
+                nacionalidade = self.nacionalidade.text()
+                codigo_INEP = self.codigo_INEP.text()
+
                 if len(cpf) != 11:
                         QMessageBox(QMessageBox.Icon.Warning, "Erro", "CPF INVÁLIDO", QMessageBox.StandardButton.Ok).exec()
                         return False  # Aqui pode ser a fonte do erro se n rolar alterar para `return None`.
                 
-                if not all([nome_aluno, raca_aluno, sexo_aluno, nascimento_uf, nascimento_municipio, data_exp_identidade, orgao_emissor, uf_identidade, cpf]):
+                if not all([nome_aluno, raca_aluno, sexo_aluno, nascimento_uf, nascimento_municipio, data_exp_identidade, orgao_emissor, uf_identidade, cpf, data_nascimento, codigo_INEP]):
                         QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos do Identificação do Aluno estão vazios", QMessageBox.StandardButton.Ok).exec()
                         return False  # Aqui tbm pode ser a fonte do erro se n rolar alterar para `return None`.
 
                 id_aluno = insert_identificacao_aluno(conn, codigo_NIS, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
-                                                cartorio_uf, nome_cartorio, info_documentos, data_exp_identidade,
-                                                orgao_emissor, uf_identidade, cpf, raca_aluno, cartorio_municipio)
+                                              cartorio_uf, nome_cartorio, info_documentos, data_exp_identidade,
+                                              orgao_emissor, uf_identidade, cpf, raca_aluno, cartorio_municipio,
+                                              data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP)
                 
                 return id_aluno 
 
         except Exception as e:
                 print(f"Erro ao inserir identificação do aluno: {e}")
                 return None
-
 
 
     def insert_saude_ui(self, conn, id_aluno):
@@ -1741,12 +1826,16 @@ class UI_MatriculaWindow(object):
         try:
                 nome_pai = self.nome_pai.text()
                 nome_mae = self.nome_mae.text()
+                responsavel = self.responsavel.text()
 
                 if not nome_mae:
                         QMessageBox(QMessageBox.Icon.Warning, "Erro", "O campo nome da mãe está vazio", QMessageBox.StandardButton.Ok).exec()
                         return False
+                if not responsavel:
+                        QMessageBox(QMessageBox.Icon.Warning, "Erro", "O campo Responsável está vazio", QMessageBox.StandardButton.Ok).exec()
+                        return False
 
-                resultado = insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai)
+                resultado = insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai, responsavel)
                 return True if resultado else False
         except Exception as e:
                 print(f"Erro ao inserir dados dos pais ou responsáveis: {e}")
@@ -1768,17 +1857,24 @@ class UI_MatriculaWindow(object):
                 transporte_escolar = self.transporte.isChecked()
                 ano_letivo = self.ano_letivo.text()
 
+                # Novos Campos
+                codigo_aluno = self.codigo_aluno.text()
+                documento_pendente = self.checkbox_documento_pendente.isChecked()
+
                 if not all([nome_escola, codigo_turma, data_matricula, codigo_inep, matricula, data_ingresso_escola,
-                        turno, serie, codigo_procedencia, ano_letivo]):
+                        turno, serie, codigo_procedencia, ano_letivo, codigo_aluno]):
                         QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos das Informações da Matrícula estão vazios", QMessageBox.StandardButton.Ok).exec()
                         return False
-                
+
                 if checa_matricula(matricula):
                         QMessageBox(QMessageBox.Icon.Warning, "Erro", "Matrícula já cadastrada", QMessageBox.StandardButton.Ok).exec()
                         return False
 
-                resultado = insert_informacoes_matricula(conn, id_aluno, nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo)
+                resultado = insert_informacoes_matricula(conn, id_aluno, nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, 
+                                                        programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
+                
                 return True if resultado else False
+        
         except Exception as e:
                 print(f"Erro ao inserir informações da matrícula: {e}")
                 return False
@@ -1878,11 +1974,11 @@ class UI_MatriculaWindow(object):
         mensagem.setStandardButtons(QMessageBox.StandardButton.Ok)
         mensagem.exec()
     
-    def exibir_mensagem_erro(self):
+    def exibir_mensagem_erro(self, erro="Ocorreu um erro ao matricular o aluno, tente novamente."):
         mensagem = QMessageBox()
-        mensagem.setIcon(QMessageBox.Icon.Information)
-        mensagem.setText("Ocorreu um erro ao matricular o aluno, tente novamente.")
-        mensagem.setWindowTitle("Confirmação de matricula ERRO")
+        mensagem.setIcon(QMessageBox.Icon.Warning)
+        mensagem.setText(f"Erro: {erro}")  # Mostra a mensagem de erro específica
+        mensagem.setWindowTitle("Confirmação de matrícula - ERRO")
         mensagem.setStandardButtons(QMessageBox.StandardButton.Ok)
         mensagem.exec()
 
