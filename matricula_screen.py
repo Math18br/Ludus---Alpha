@@ -1689,48 +1689,75 @@ class UI_MatriculaWindow(object):
         self.cancel_button.setText(_translate("MainWindow", "Cancelar"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">MATRICULA</p></body></html>"))
 
-
     def matricula_aluno(self):
         conn = connect_db()
         if conn is not None:
                 try:
-                        conn.autocommit = False
+                        conn.autocommit = False # inicio auto
 
+                        # Insere a identificação do aluno
                         id_aluno = self.insert_identificacao_aluno_ui(conn)
                         print("ID Aluno:", id_aluno)
                         if id_aluno is None:
                                 raise Exception("Falha ao inserir identificação do aluno")
 
+                        # Insere as informações de saúde
                         if not self.insert_saude_ui(conn, id_aluno):
                                 raise Exception("Falha ao inserir informações de saúde")
-                        
+
+                        # Insere o endereço
                         if not self.insert_endereco_ui(conn, id_aluno):
                                 raise Exception("Falha ao inserir endereço")
 
+                        # Insere os dados dos pais ou responsáveis
                         if not self.insert_dados_pais_ui(conn, id_aluno):
                                 raise Exception("Falha ao inserir dados dos pais ou responsáveis")
 
+                        # Insere as informações da matrícula
                         if not self.insert_informacoes_matricula_ui(conn, id_aluno):
                                 raise Exception("Falha ao inserir informações da matrícula")
 
+                        # Insere a certidão
                         if not self.insert_certidao_ui(conn, id_aluno):
                                 raise Exception("Falha ao inserir certidão")
 
+                        # Se tudo estiver certo
                         conn.commit()
+
+                        self.salvar_excel()
 
                         self.exibir_mensagem_sucesso()
                         print("Todos os dados foram inseridos com sucesso.")
 
                 except Exception as e:
                         print(f"Erro durante a matrícula: {e}")
+
                         conn.rollback()
+
+                        # controle de erro para os ids dos alunos
+                        try:
+                                if id_aluno is not None:
+                                        with conn.cursor() as cur:
+                                                cur.execute("DELETE FROM public.saude WHERE id_aluno = %s", (id_aluno,))
+                                                cur.execute("DELETE FROM public.endereco WHERE id_aluno = %s", (id_aluno,))
+                                                cur.execute("DELETE FROM public.dados_pais_responsavel WHERE id_aluno = %s", (id_aluno,))
+                                                cur.execute("DELETE FROM public.informacoes_matricula WHERE id_aluno = %s", (id_aluno,))
+                                                cur.execute("DELETE FROM public.certidao WHERE id_aluno = %s", (id_aluno,))
+                                                cur.execute("DELETE FROM public.identificacao_aluno WHERE id_aluno = %s", (id_aluno,))
+                                                cur.execute("DELETE FROM public.certidao WHERE id_aluno = %s", (id_aluno,))
+
+                                                conn.commit()
+                                                print(f"Aluno com ID {id_aluno} foi removido.")
+                        except Exception as delete_error:
+                                print(f"Erro ao tentar remover o aluno com ID {id_aluno}: {delete_error}")
+
                         self.exibir_mensagem_erro(str(e))
 
                 finally:
                         conn.close()
+
         else:
                 print("Não foi possível conectar ao banco de dados.")
-
 
     def insert_identificacao_aluno_ui(self, conn):
         try:
@@ -1774,7 +1801,6 @@ class UI_MatriculaWindow(object):
                 print(f"Erro ao inserir identificação do aluno: {e}")
                 return None
 
-
     def insert_saude_ui(self, conn, id_aluno):
         try:
                 autismo = self.def_autismo.isChecked()
@@ -1801,7 +1827,6 @@ class UI_MatriculaWindow(object):
                 print(f"Erro ao inserir informações de saúde: {e}")
                 return False
 
-
     def insert_endereco_ui(self, conn, id_aluno):
         try:
                 endereco = self.endereco.text()
@@ -1821,7 +1846,6 @@ class UI_MatriculaWindow(object):
                 print(f"Erro ao inserir endereço: {e}")
                 return False
 
-
     def insert_dados_pais_ui(self, conn, id_aluno):
         try:
                 nome_pai = self.nome_pai.text()
@@ -1840,7 +1864,6 @@ class UI_MatriculaWindow(object):
         except Exception as e:
                 print(f"Erro ao inserir dados dos pais ou responsáveis: {e}")
                 return False
-
 
     def insert_informacoes_matricula_ui(self, conn, id_aluno):
         try:
@@ -1879,7 +1902,6 @@ class UI_MatriculaWindow(object):
                 print(f"Erro ao inserir informações da matrícula: {e}")
                 return False
 
-
     def insert_certidao_ui(self, conn, id_aluno):
         try:
                 num_matricula_registro_civil = self.numero_registro_civil.text()  
@@ -1894,8 +1916,6 @@ class UI_MatriculaWindow(object):
                 print(f"Erro ao inserir certidão: {e}")
                 return False
 
-        
-
     def bool_para_sim_nao(self,valor):
         return "SIM" if valor else "NÃO"
 
@@ -1906,9 +1926,13 @@ class UI_MatriculaWindow(object):
             "MATRÍCULA": self.matricula.text(),
             "NOME ALUNO": self.nome_aluno.text(),
             "NIS": self.codigo_NIS.text(),
+            "COD INEP": self.codigo_INEP.text(),
             "RAÇA ALUNO": self.sel_id_racial.currentText(),
+            "DATA DE NASCIMENTO": self.data_nascimento.date().toString("yyyy-MM-dd"),
+            "TIPO DE NASCIMENTO": self.tipo_nascimento.text(),
             "SEXO": self.sel_sexo.currentText(),
             "UF": self.nascimento_uf.text(),
+            "NACIONALIDADE" : self.nacionalidade.text(),
             "MUNICÍPIO": self.nascimento_municipio.text(),
             "UF CARTÓRIO": self.cartorio_uf.text(),
             "NOME CARTÓRIO": self.cartorio_nome.text(),
@@ -1943,7 +1967,9 @@ class UI_MatriculaWindow(object):
             "UF": self.uf_endereco.text(),
             "NOME PAI": self.nome_pai.text(),
             "NOME MÃE": self.nome_mae.text(),
+            "RESPONSÁVEL" : self.responsavel.text(),
             "NOME ESCOLA": self.nome_escola.text(),
+            "CÓDIGO ALUNO": self.codigo_aluno.text(),
             "CÓDIGO TURMA": self.codigo_turma.text(),
             "DATA MATRÍCULA": self.data_matricula.text(),
             "COD INEP": self.codigo_inep.text(),
@@ -1953,6 +1979,8 @@ class UI_MatriculaWindow(object):
             "CÓDIGO PROCEDÊNCIA": self.sel_procedencia.currentText(),
             "BOLSA FAMÍLIA": self.bolsa_familia.isChecked(),
             "TRANSPORTE ESCOLAR": self.transporte.isChecked(),
+            "DOCUMENTO PENDENTE": self.checkbox_documento_pendente.isChecked(),
+            "TIPO DE CERTIDÃO": self.sel_certidao_civil.currentText(),
             "MATRÍCULA REGISTRO CIVIL": self.numero_registro_civil.text(),
             "NUM TERMO": self.numero_termo.text(),
             "LIVRO": self.livro.text(),

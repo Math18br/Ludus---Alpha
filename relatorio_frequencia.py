@@ -374,16 +374,24 @@ class Ui_RelatorioWindow(object):
 
 
     def exportar_para_csv(self):
-        nome_arquivo = 'base_relatório.csv'
+        ano_selecionado = self.date_selection.date().year()
+        mes_selecionado = self.month_selection.currentText()
+        
+        if mes_selecionado == "Anual":
+            nome_arquivo = f'relatorio_frequencia_{ano_selecionado}.csv'
+            headers = ["Nome Aluno", "Matricula"] + [f"{mes}" for mes in
+                                                    ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out",
+                                                    "Nov", "Dez"]] + ["Total Faltas", "%"]
+        else:
+            nome_arquivo = f'relatorio_frequencia_{ano_selecionado}_{mes_selecionado}.csv'
+            headers = ["Nome Aluno", "Matricula", "Faltas", "%"]
+
         pasta_arquivos = os.path.join(os.getcwd(), 'arquivos salvos')
 
         if not os.path.exists(pasta_arquivos):
             os.makedirs(pasta_arquivos)
 
         caminho_arquivo = os.path.join(pasta_arquivos, nome_arquivo)
-        headers = ["Nome Aluno", "Matricula"] + [f"{mes}" for mes in
-                                                 ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out",
-                                                  "Nov", "Dez"]]
 
         try:
             modo = 'a' if os.path.exists(caminho_arquivo) else 'w'
@@ -400,7 +408,7 @@ class Ui_RelatorioWindow(object):
                         else:
                             linha.append('')
                     escritor.writerow(linha)
-            self.mostrar_mensagem_sucesso('Dados exportados com sucesso para CSV')
+            self.mostrar_mensagem_sucesso(f'Dados exportados com sucesso para {nome_arquivo}')
         except Exception as e:
             self.mostrar_mensagem_erro(f"Erro ao exportar dados: {e}")
      
