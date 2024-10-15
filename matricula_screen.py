@@ -1337,7 +1337,7 @@ class UI_MatriculaWindow(object):
 "color: black\n"
 "\n"
 "")
-        self.complemento.setMaxLength(10)
+        self.complemento.setMaxLength(200)
         self.complemento.setClearButtonEnabled(False)
         self.complemento.setObjectName("complemento")
         self.gridLayout_7.addWidget(self.complemento, 1, 3, 1, 1)
@@ -1623,6 +1623,7 @@ class UI_MatriculaWindow(object):
         self.serie_label.setText(_translate("MainWindow", "Série*"))
         self.procedencia_label.setText(_translate("MainWindow", "Codigo de Procedência*"))
         self.bolsa_familia.setText(_translate("MainWindow", "Programa Bolsa Família"))
+
         self.sel_serie.setItemText(0, _translate("MainWindow", "01. Jardim I"))
         self.sel_serie.setItemText(1, _translate("MainWindow", "02. Jardim II"))
         self.sel_serie.setItemText(2, _translate("MainWindow", "03. 1° Ano"))
@@ -1630,6 +1631,7 @@ class UI_MatriculaWindow(object):
         self.sel_serie.setItemText(4, _translate("MainWindow", "05. 3° Ano"))
         self.sel_serie.setItemText(5, _translate("MainWindow", "06. 4° Ano"))
         self.sel_serie.setItemText(6, _translate("MainWindow", "07. 5° Ano"))
+
         self.turno_label.setText(_translate("MainWindow", "Turno*"))
         self.transporte.setText(_translate("MainWindow", "Transporte Escolar"))
         self.sel_turno.setItemText(0, _translate("MainWindow", "Manhã"))
@@ -1770,7 +1772,7 @@ class UI_MatriculaWindow(object):
                 cartorio_uf = self.cartorio_uf.text()
                 nome_cartorio = self.cartorio_nome.text()
                 cartorio_municipio = self.cartorio_municipio.text()
-                data_exp_identidade = self.data_expedicao.date().toString("yyyy-MM-dd")
+                data_exp_identidade = self.data_exp.date().toString("yyyy-MM-dd")
                 orgao_emissor = self.documento_orgao_emissor.text()
                 uf_identidade = self.nascimento_uf.text()
                 cpf = self.cpf_aluno.text()
@@ -1893,8 +1895,7 @@ class UI_MatriculaWindow(object):
                         QMessageBox(QMessageBox.Icon.Warning, "Erro", "Matrícula já cadastrada", QMessageBox.StandardButton.Ok).exec()
                         return False
 
-                resultado = insert_informacoes_matricula(conn, id_aluno, nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, 
-                                                        programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
+                resultado = insert_informacoes_matricula(conn, id_aluno, nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
                 
                 return True if resultado else False
         

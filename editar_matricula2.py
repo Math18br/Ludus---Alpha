@@ -1,7 +1,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
-from PyQt6.QtCore import QDate, Qt
+from PyQt6.QtCore import QRegularExpression, QDate, Qt
 from PyQt6.QtWidgets import QMessageBox
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QRegularExpressionValidator
 from database import *
 import pickle, os
 class Ui_Edit_2_Window(object):
@@ -10,8 +10,6 @@ class Ui_Edit_2_Window(object):
         self.importar_dados()
 
     def setupUi(self, MainWindow):
-
-        #self.importar_dados()
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(750, 747)
@@ -71,6 +69,11 @@ class Ui_Edit_2_Window(object):
         self.nome_aluno.setClearButtonEnabled(True)
         self.nome_aluno.setObjectName("nome_aluno")
         self.verticalLayout_3.addWidget(self.nome_aluno)
+
+        validador = QtGui.QIntValidator()
+        cpf_regex = QRegularExpression("^\\d{11}$")
+        cpf_validador = QRegularExpressionValidator(cpf_regex)
+
         self.codigo_NIS = QtWidgets.QLineEdit(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -92,6 +95,34 @@ class Ui_Edit_2_Window(object):
         self.codigo_NIS.setClearButtonEnabled(True)
         self.codigo_NIS.setObjectName("codigo_NIS")
         self.verticalLayout_3.addWidget(self.codigo_NIS)
+
+        # ID do aluno INEP
+
+        self.codigo_INEP = QtWidgets.QLineEdit(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.codigo_INEP.setFont(font)
+        self.codigo_INEP.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                       "border-style: outset;\n"
+                                       "border-width: 1px;\n"
+                                       "border-radius: 2px;\n"
+                                       "border-color:  rgb(203, 132, 0);\n"
+                                       "font: 12px \"Inter Medium\" ;\n"
+                                       "color: black;")
+        self.codigo_INEP.setMaxLength(12)
+        self.codigo_INEP.setClearButtonEnabled(True)
+        self.codigo_INEP.setObjectName("codigo_INEP")
+
+        validator = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[0-9]{11}"), self.codigo_INEP)
+        self.codigo_INEP.setValidator(validator)
+        self.codigo_INEP.setPlaceholderText("Digite o ID do aluno INEP")
+
+        self.verticalLayout_3.addWidget(self.codigo_INEP)
+
         self.label_id_racial = QtWidgets.QLabel(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -208,6 +239,82 @@ class Ui_Edit_2_Window(object):
         self.nascimento_municipio.setClearButtonEnabled(False)
         self.nascimento_municipio.setObjectName("nascimento_municipio")
         self.verticalLayout_3.addWidget(self.nascimento_municipio)
+
+        # Campo para Nacionalidade
+
+        self.nacionalidade = QtWidgets.QLineEdit(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.nacionalidade.setFont(font)
+        self.nacionalidade.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                         "border-style: outset;\n"
+                                         "border-width: 1px;\n"
+                                         "border-radius: 2px;\n"
+                                         "border-color:  rgb(203, 132, 0);\n"
+                                         "font: 12px \"Inter Medium\" ;\n"
+                                         "color: black\n"
+                                         "\n"
+                                         "")
+        self.nacionalidade.setMaxLength(30)
+        self.nacionalidade.setClearButtonEnabled(False)
+        self.nacionalidade.setPlaceholderText("Nacionalidade")
+        self.nacionalidade.setObjectName("nacionalidade")
+        self.verticalLayout_3.addWidget(self.nacionalidade)
+
+        # Campo para Tipo de Nascimento
+
+        self.tipo_nascimento = QtWidgets.QLineEdit(parent=self.id_aluno)
+        self.tipo_nascimento.setFont(font)
+        self.tipo_nascimento.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                           "border-style: outset;\n"
+                                           "border-width: 1px;\n"
+                                           "border-radius: 2px;\n"
+                                           "border-color:  rgb(203, 132, 0);\n"
+                                           "font: 12px \"Inter Medium\" ;\n"
+                                           "color: black\n"
+                                           "\n"
+                                           "")
+        self.tipo_nascimento.setMaxLength(2)
+        self.tipo_nascimento.setClearButtonEnabled(False)
+        self.tipo_nascimento.setPlaceholderText("Tipo de Nascimento")
+        self.tipo_nascimento.setObjectName("tipo_nascimento")
+        self.verticalLayout_3.addWidget(self.tipo_nascimento)
+
+        # Data de Nascimento
+
+        self.label_data_nascimento = QtWidgets.QLabel("Data de Nascimento:", parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(7)
+        self.label_data_nascimento.setFont(font)
+        self.label_data_nascimento.setStyleSheet("color: rgb(203, 132, 0);\n"
+                                                 "font: 57 10pt \"Inter Medium\";")
+        self.label_data_nascimento.setObjectName("label_data_nascimento")
+        self.verticalLayout_3.addWidget(self.label_data_nascimento)
+
+        self.data_nascimento = QtWidgets.QDateEdit(parent=self.id_aluno)
+        self.data_nascimento.setFont(font)
+        self.data_nascimento.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                           "border-style: outset;\n"
+                                           "border-width: 1px;\n"
+                                           "border-radius: 2px;\n"
+                                           "border-color: rgb(203, 132, 0);\n"
+                                           "font: 12px \"Inter Medium\" ;\n"
+                                           "color: black\n"
+                                           "\n"
+                                           "")
+        self.data_nascimento.setCalendarPopup(True)
+        self.data_nascimento.setDate(QtCore.QDate.currentDate())
+        self.data_nascimento.setObjectName("data_nascimento")
+        self.verticalLayout_3.addWidget(self.data_nascimento)
+
         self.label_certidao_civil = QtWidgets.QLabel(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -216,7 +323,7 @@ class Ui_Edit_2_Window(object):
         font.setItalic(False)
         font.setWeight(7)
         self.label_certidao_civil.setFont(font)
-        self.label_certidao_civil.setStyleSheet("color: rgb(45, 84, 60);\n"
+        self.label_certidao_civil.setStyleSheet("color: rgb(203, 132, 0);\n"
                                                 "font: 57 10pt \"Inter Medium\";")
         self.label_certidao_civil.setObjectName("label_certidao_civil")
         self.verticalLayout_3.addWidget(self.label_certidao_civil)
@@ -619,22 +726,6 @@ class Ui_Edit_2_Window(object):
         self.sel_serie.addItem("")
         self.sel_serie.addItem("")
         self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
-        self.sel_serie.addItem("")
         self.gridLayout_5.addWidget(self.sel_serie, 5, 1, 1, 1)
         self.turno_label = QtWidgets.QLabel(parent=self.InformacoesdeMatricula)
         font = QtGui.QFont()
@@ -708,6 +799,7 @@ class Ui_Edit_2_Window(object):
         self.sel_procedencia.addItem("")
         self.sel_procedencia.addItem("")
         self.gridLayout_5.addWidget(self.sel_procedencia, 5, 2, 1, 3)
+
         self.codigo_inep = QtWidgets.QLineEdit(parent=self.InformacoesdeMatricula)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -731,6 +823,7 @@ class Ui_Edit_2_Window(object):
         self.codigo_inep.setClearButtonEnabled(False)
         self.codigo_inep.setObjectName("codigo_inep")
         self.gridLayout_5.addWidget(self.codigo_inep, 2, 0, 1, 3)
+        self.codigo_inep.setValidator(validador)
         self.codigo_turma = QtWidgets.QLineEdit(parent=self.InformacoesdeMatricula)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -870,6 +963,39 @@ class Ui_Edit_2_Window(object):
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.groupBox)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
+
+        # código do aluno
+
+        self.codigo_aluno = QtWidgets.QLineEdit(parent=self.groupBox)
+        self.codigo_aluno.setMinimumSize(QtCore.QSize(0, 0))
+        self.codigo_aluno.setFont(font)
+        self.codigo_aluno.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                        "border-style: outset;\n"
+                                        "border-width: 1px;\n"
+                                        "border-radius: 2px;\n"
+                                        "border-color: rgb(203, 132, 0);\n"
+                                        "font: 12px \"Inter Medium\" ;\n"
+                                        "color: black;")
+        self.codigo_aluno.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDigitsOnly)
+        self.codigo_aluno.setMaxLength(20)
+        self.codigo_aluno.setClearButtonEnabled(True)
+        self.codigo_aluno.setObjectName("codigo_aluno")
+        self.codigo_aluno.setPlaceholderText("Código do Aluno")
+        self.verticalLayout_5.addWidget(self.codigo_aluno)
+
+        # Documento Pendente?
+        self.checkbox_documento_pendente = QtWidgets.QCheckBox("Documento Pendente?", parent=self.groupBox)
+        self.checkbox_documento_pendente.setObjectName("checkbox_documento_pendente")
+        self.checkbox_documento_pendente.setStyleSheet("\n"
+                                                       "font: 12px \"Inter Medium\" ;\n"
+                                                       "color: black\n"
+                                                       "\n"
+                                                       "")
+        self.verticalLayout_5.addWidget(self.checkbox_documento_pendente)
+
+        self.gridLayout_5.addWidget(self.codigo_aluno, 6, 0, 1, 3)
+        self.gridLayout_5.addWidget(self.checkbox_documento_pendente, 6, 5, 1, 1)
+
         self.nome_pai = QtWidgets.QLineEdit(parent=self.groupBox)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -891,6 +1017,7 @@ class Ui_Edit_2_Window(object):
         self.nome_pai.setClearButtonEnabled(True)
         self.nome_pai.setObjectName("nome_pai")
         self.verticalLayout_5.addWidget(self.nome_pai)
+
         self.nome_mae = QtWidgets.QLineEdit(parent=self.groupBox)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -912,6 +1039,32 @@ class Ui_Edit_2_Window(object):
         self.nome_mae.setClearButtonEnabled(True)
         self.nome_mae.setObjectName("nome_mae")
         self.verticalLayout_5.addWidget(self.nome_mae)
+
+        # responsavel
+
+        self.responsavel = QtWidgets.QLineEdit(parent=self.groupBox)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.responsavel.setFont(font)
+        self.responsavel.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                       "border-style: outset;\n"
+                                       "border-width: 1px;\n"
+                                       "border-radius: 2px;\n"
+                                       "border-color:  rgb(203, 132, 0);\n"
+                                       "font: 12px \"Inter Medium\" ;\n"
+                                       "color: black\n"
+                                       "\n"
+                                       "")
+        self.responsavel.setMaxLength(255)
+        self.responsavel.setClearButtonEnabled(True)
+        self.responsavel.setObjectName("responsavel")
+        self.responsavel.setPlaceholderText("Responsável")
+        self.verticalLayout_5.addWidget(self.responsavel)
+
         self.verticalLayout_6.addWidget(self.groupBox)
         self.frame = QtWidgets.QFrame(parent=self.scrollAreaWidgetContents_2)
         font = QtGui.QFont()
@@ -1171,7 +1324,7 @@ class Ui_Edit_2_Window(object):
 "color: black\n"
 "\n"
 "")
-        self.complemento.setMaxLength(10)
+        self.complemento.setMaxLength(200)
         self.complemento.setClearButtonEnabled(False)
         self.complemento.setObjectName("complemento")
         self.gridLayout_7.addWidget(self.complemento, 1, 3, 1, 1)
@@ -1432,13 +1585,15 @@ class Ui_Edit_2_Window(object):
         self.codigo_NIS.setText(_translate("MainWindow", str(self.imported_nis)))
         self.codigo_NIS.setPlaceholderText(_translate("MainWindow", "NIS"))
 
+        self.codigo_INEP.setText(_translate("MainWindow", self.imported_codigo_inep))
+
         self.label_id_racial.setText(_translate("MainWindow", "Identidade Racial"))
 
-        self.sel_id_racial.setItemText(0, _translate("MainWindow", "Branca"))
-        self.sel_id_racial.setItemText(1, _translate("MainWindow", "Preta"))
-        self.sel_id_racial.setItemText(2, _translate("MainWindow", "Parda"))
-        self.sel_id_racial.setItemText(3, _translate("MainWindow", "Amarela"))
-        self.sel_id_racial.setItemText(4, _translate("MainWindow", "Indígena"))
+        self.sel_id_racial.setItemText(0, _translate("MainWindow", "1- Branca"))
+        self.sel_id_racial.setItemText(1, _translate("MainWindow", "2- Preta"))
+        self.sel_id_racial.setItemText(2, _translate("MainWindow", "3- Parda"))
+        self.sel_id_racial.setItemText(3, _translate("MainWindow", "4- Amarela"))
+        self.sel_id_racial.setItemText(4, _translate("MainWindow", "5- Indígena"))
         self.sel_id_racial.setItemText(5, _translate("MainWindow", "N/A"))
         self.sel_id_racial.setCurrentIndex(self.imported_raca)
 
@@ -1453,6 +1608,14 @@ class Ui_Edit_2_Window(object):
 
         self.nascimento_municipio.setPlaceholderText(_translate("MainWindow", "Município de nascimento*"))
         self.nascimento_municipio.setText(_translate("MainWindow", str(self.imported_local_nascimento_municipio)))
+
+        self.nacionalidade.setText(_translate("MainWindow", self.imported_nacionalidade))
+
+        self.tipo_nascimento.setText(_translate("MainWindow", self.imported_tipo_nasc))
+
+        #data de nascimento
+        self.data_nascimento.setDisplayFormat(_translate("MainWindow", "d/M/yyyy"))
+        self.data_nascimento.setDate(QDate(int(self.ano_nasc), int(self.mes_nasc), int(self.dia_nasc)))
 
         self.label_certidao_civil.setText(_translate("MainWindow", "Tipo da Certidão Civil")) #Não inserido no banco
         self.sel_certidao_civil.setItemText(0, _translate("MainWindow", "Nascimento"))
@@ -1489,7 +1652,7 @@ class Ui_Edit_2_Window(object):
         self.documento_tipo.setText(_translate("MainWindow", self.imported_identidade_doc_pass))
 
         self.data_exp.setDisplayFormat(_translate("MainWindow", "d/M/yyyy"))
-        self.data_exp.setDate(QDate(int(self.ano_exp_id), int(self.mes_exp_id), int(self.dia_exp_id)))  ###
+        self.data_exp.setDate(QDate(int(self.ano_exp_id), int(self.mes_exp_id), int(self.dia_exp_id)))
 
         self.cartorio_nome.setPlaceholderText(_translate("MainWindow", "Nome do Cartório"))
         self.cartorio_nome.setText(_translate("MainWindow", str(self.imported_nome_cartorio)))
@@ -1513,34 +1676,23 @@ class Ui_Edit_2_Window(object):
         self.procedencia_label.setText(_translate("MainWindow", "Codigo de Procedência*"))
 
         self.bolsa_familia.setText(_translate("MainWindow", "Programa Bolsa Família"))
+        self.bolsa_familia.setChecked(self.imported_participa_programa)
 
+        self.checkbox_documento_pendente.setChecked(self.imported_doc_pendente)
+
+        self.sel_serie.setItemText(0, _translate("MainWindow", "01. Jardim I"))
+        self.sel_serie.setItemText(1, _translate("MainWindow", "02. Jardim II"))
+        self.sel_serie.setItemText(2, _translate("MainWindow", "03. 1° Ano"))
+        self.sel_serie.setItemText(3, _translate("MainWindow", "04. 2° Ano"))
+        self.sel_serie.setItemText(4, _translate("MainWindow", "05. 3° Ano"))
+        self.sel_serie.setItemText(5, _translate("MainWindow", "06. 4° Ano"))
+        self.sel_serie.setItemText(6, _translate("MainWindow", "07. 5° Ano"))
         self.sel_serie.setCurrentIndex(self.imported_codigo_serie)
-        self.sel_serie.setItemText(0, _translate("MainWindow", "01. Berçário I"))
-        self.sel_serie.setItemText(1, _translate("MainWindow", "02. Berçário II"))
-        self.sel_serie.setItemText(2, _translate("MainWindow", "03. Maternal I"))
-        self.sel_serie.setItemText(3, _translate("MainWindow", "04. Maternal II"))
-        self.sel_serie.setItemText(4, _translate("MainWindow", "05. Jardim I"))
-        self.sel_serie.setItemText(5, _translate("MainWindow", "06. Jardim II"))
-        self.sel_serie.setItemText(6, _translate("MainWindow", "07. Ciclo I - 1° Ano"))
-        self.sel_serie.setItemText(7, _translate("MainWindow", "08. Ciclo I - 2° Ano"))
-        self.sel_serie.setItemText(8, _translate("MainWindow", "09. Ciclo I - 3° Ano"))
-        self.sel_serie.setItemText(9, _translate("MainWindow", "10. Ciclo II - 1° Ano"))
-        self.sel_serie.setItemText(10, _translate("MainWindow", "11. Ciclo II - 2° Ano"))
-        self.sel_serie.setItemText(11, _translate("MainWindow", "12. Ciclo III - 1° Ano"))
-        self.sel_serie.setItemText(12, _translate("MainWindow", "13. Ciclo III - 2° Ano"))
-        self.sel_serie.setItemText(13, _translate("MainWindow", "14. Ciclo IV - 1° Ano"))
-        self.sel_serie.setItemText(14, _translate("MainWindow", "15. Ciclo IV - 2° Ano"))
-        self.sel_serie.setItemText(15, _translate("MainWindow", "16. 1ª Totalidade"))
-        self.sel_serie.setItemText(16, _translate("MainWindow", "17.  2ª Totalidade"))
-        self.sel_serie.setItemText(17, _translate("MainWindow", "18.  3ª Etapa"))
-        self.sel_serie.setItemText(18, _translate("MainWindow", "19.  4ª Etapa"))
-        self.sel_serie.setItemText(19, _translate("MainWindow", "20. 1° Ano"))
-        self.sel_serie.setItemText(20, _translate("MainWindow", "21. 2° Ano"))
-        self.sel_serie.setItemText(21, _translate("MainWindow", "22. 3° Ano"))
-        self.sel_serie.setItemText(22, _translate("MainWindow", "23. 4° Ano"))
 
         self.turno_label.setText(_translate("MainWindow", "Turno*"))
-        self.transporte.setText(_translate("MainWindow", "Transporte Escolar?"))
+
+        self.transporte.setText(_translate("MainWindow", "Transporte Escolar"))
+        self.transporte.setChecked(self.imported_transporte_escola)
 
         self.sel_turno.setCurrentIndex(self.imported_turno)
         self.sel_turno.setItemText(0, _translate("MainWindow", "Manhã"))
@@ -1549,13 +1701,16 @@ class Ui_Edit_2_Window(object):
         self.sel_turno.setItemText(3, _translate("MainWindow", "Noite"))
         self.sel_turno.setItemText(4, _translate("MainWindow", "Tempo Integral"))
 
-        self.sel_procedencia.setCurrentIndex(self.imported_codigo_procedencia)
+
         self.sel_procedencia.setItemText(0, _translate("MainWindow", "01 - Do Lar"))
         self.sel_procedencia.setItemText(1, _translate("MainWindow", "02 - Escola Municipal"))
         self.sel_procedencia.setItemText(2, _translate("MainWindow", "03 - Escola Estadual"))
         self.sel_procedencia.setItemText(3, _translate("MainWindow", "04 - Escola Particular"))
         self.sel_procedencia.setItemText(4, _translate("MainWindow", "05 - Escola Federal"))
         self.sel_procedencia.setItemText(5, _translate("MainWindow", "06 - Escola Comunitária"))
+        self.sel_procedencia.setCurrentIndex(self.imported_codigo_procedencia)
+
+        self.codigo_aluno.setText(_translate("MainWindow", self.imported_codigo_aluno))
 
         self.codigo_inep.setPlaceholderText(_translate("MainWindow", "Codigo Senso Inep*"))
         self.codigo_inep.setText(_translate("MainWindow", self.imported_cod_censo))
@@ -1574,8 +1729,10 @@ class Ui_Edit_2_Window(object):
         self.matricula.setText(_translate("MainWindow", self.imported_matricula))
 
         self.data_matricula_label.setText(_translate("MainWindow", "Data de Matricula"))
+        self.data_matricula.setDate(QDate(int(self.ano_matricula), int(self.mes_matricula), int(self.dia_matricula)))
 
         self.data_ingresso_label.setText(_translate("MainWindow", "Data de Ingresso"))
+        self.data_ingresso_escola.setDate(QDate(int(self.ano_ingresso), int(self.mes_ingresso), int(self.dia_ingresso)))
 
         self.groupBox.setTitle(_translate("MainWindow", "Dados dos Pais/Responsáveis"))
 
@@ -1585,24 +1742,55 @@ class Ui_Edit_2_Window(object):
         self.nome_mae.setPlaceholderText(_translate("MainWindow", "Nome da Mãe"))
         self.nome_mae.setText(_translate("MainWindow", self.imported_nome_mae))
 
+        self.responsavel.setText(_translate("MainWindow", self.imported_responsavel))
+
         self.transtorno_global_desenvolvimento.setTitle(_translate("MainWindow", "Transtorno Global do Desenvolvimento"))
 
         self.def_autismo.setText(_translate("MainWindow", "Autismo"))
+        self.def_autismo.setChecked(self.imported_autismo)
+
         self.def_rett.setText(_translate("MainWindow", "Sindrome de Rett"))
+        self.def_rett.setChecked(self.imported_rett)
+
         self.def_asperger.setText(_translate("MainWindow", "Sindrome de Asperger"))
+        self.def_asperger.setChecked(self.imported_asperger)
+
         self.def_TDI.setText(_translate("MainWindow", "Transtorno desintegrativo da infância"))
+        self.def_TDI.setChecked(self.imported_transtorno_desintegrativo)
+
         self.groupBox_8.setTitle(_translate("MainWindow", "Altas Habilidades / Superdotação"))
+
         self.altas_habilidades.setText(_translate("MainWindow", "Altas Habilidades / Superdotação"))
+        self.altas_habilidades.setChecked(self.imported_altas_habilidades)
+
         self.deficiencias.setTitle(_translate("MainWindow", "Deficiências"))
+
         self.def_baixa_visao.setText(_translate("MainWindow", "Baixa Visão"))
+        self.def_baixa_visao.setChecked(self.imported_baixa_visao)
+
         self.def_cegueira.setText(_translate("MainWindow", "Cegueira"))
+        self.def_cegueira.setChecked(self.imported_cegueira)
+
         self.def_auditiva.setText(_translate("MainWindow", "Deficiência Auditiva"))
+        self.def_auditiva.setChecked(self.imported_auditiva)
+
         self.def_intelectual.setText(_translate("MainWindow", "Deficiência Intelectual"))
+        self.def_intelectual.setChecked(self.imported_intelectual)
+
         self.def_fisica.setText(_translate("MainWindow", "Deficiência Física"))
+        self.def_fisica.setChecked(self.imported_fisica)
+
         self.def_multipla.setText(_translate("MainWindow", "Deficiência Múltipla"))
+        self.def_multipla.setChecked(self.imported_multipla)
+
         self.def_down.setText(_translate("MainWindow", "Sindrome de Down"))
+        self.def_down.setChecked(self.imported_sindrome_down)
+
         self.def_surdez.setText(_translate("MainWindow", "Surdez"))
+        self.def_surdez.setChecked(self.imported_surdez)
+
         self.def_surdocegueira.setText(_translate("MainWindow", "Surdocegueira"))
+        self.def_surdocegueira.setChecked(self.imported_surdocegueira)
 
         #endereco
         self.caixa_endereco.setTitle(_translate("MainWindow", "Endereço"))
@@ -1665,6 +1853,10 @@ class Ui_Edit_2_Window(object):
                 uf_identidade = pickle.load(arquivo)
                 cpf = pickle.load(arquivo)
                 raca = pickle.load(arquivo)
+                data_nasc = pickle.load(arquivo)
+                tipo_nasc = pickle.load(arquivo)
+                nacionalidade = pickle.load(arquivo)
+                codigo_inep = pickle.load(arquivo)
 
                 num_matricula_rc = pickle.load(arquivo)
                 num_termo = pickle.load(arquivo)
@@ -1684,9 +1876,12 @@ class Ui_Edit_2_Window(object):
                 participa_programa = pickle.load(arquivo)
                 transporte_escolar = pickle.load(arquivo)
                 ano_letivo = pickle.load(arquivo)
+                codigo_aluno = pickle.load(arquivo)
+                doc_pendente = pickle.load(arquivo)
 
                 nome_mae = pickle.load(arquivo)
                 nome_pai = pickle.load(arquivo)
+                responsavel = pickle.load(arquivo)
 
                 autismo = pickle.load(arquivo)
                 rett = pickle.load(arquivo)
@@ -1719,36 +1914,20 @@ class Ui_Edit_2_Window(object):
             elif sexo == 'Feminino': sexo = 1
             else: sexo = 3
 
-            if raca == 'Branca': raca = 0
-            elif raca == 'Preta': raca = 1
-            elif raca == 'Parda': raca = 2
-            elif raca == 'Amarela': raca = 3
-            elif raca == 'Indígena': raca = 4
+            if raca == '1- Branca': raca = 0
+            elif raca == '2- Preta': raca = 1
+            elif raca == '3- Parda': raca = 2
+            elif raca == '4- Amarela': raca = 3
+            elif raca == '5- Indígena': raca = 4
             else: raca = 5
 
-            if codigo_serie == '01. Berçário I': codigo_serie = 0
-            elif codigo_serie == '02. Berçário II': codigo_serie = 1
-            elif codigo_serie == '03. Maternal I': codigo_serie = 2
-            elif codigo_serie == '04. Maternal II': codigo_serie = 3
-            elif codigo_serie == '05. Jardim I': codigo_serie = 4
-            elif codigo_serie == '06. Jardim II': codigo_serie = 5
-            elif codigo_serie == '07. Ciclo I - 1° Ano': codigo_serie = 6
-            elif codigo_serie == '08. Ciclo I - 2° Ano': codigo_serie = 7
-            elif codigo_serie == '09. Ciclo I - 3° Ano': codigo_serie = 8
-            elif codigo_serie == '10. Ciclo II - 1° Ano': codigo_serie = 9
-            elif codigo_serie == '11. Ciclo II - 2° Ano': codigo_serie = 10
-            elif codigo_serie == '12. Ciclo III - 1° Ano': codigo_serie = 11
-            elif codigo_serie == '13. Ciclo III - 2° Ano': codigo_serie = 12
-            elif codigo_serie == '14. Ciclo IV - 1° Ano': codigo_serie = 13
-            elif codigo_serie == '15. Ciclo IV - 2° Ano': codigo_serie = 14
-            elif codigo_serie == '16. 1ª Totalidade': codigo_serie = 15
-            elif codigo_serie == '17.  2ª Totalidade': codigo_serie = 16
-            elif codigo_serie == '18.  3ª Etapa': codigo_serie = 17
-            elif codigo_serie == '19.  4ª Etapa': codigo_serie = 18
-            elif codigo_serie == '20. 1° Ano': codigo_serie = 19
-            elif codigo_serie == '21. 2° Ano': codigo_serie = 20
-            elif codigo_serie == '22. 3° Ano': codigo_serie = 21
-            else: codigo_serie = 22
+            if codigo_serie == '01. Jardim I': codigo_serie = 0
+            elif codigo_serie == '02. Jardim II': codigo_serie = 1
+            elif codigo_serie == '03. 1° Ano': codigo_serie = 2
+            elif codigo_serie == '04. 2° Ano': codigo_serie = 3
+            elif codigo_serie == '05. 3° Ano': codigo_serie = 4
+            elif codigo_serie == '06. 4° Ano': codigo_serie = 5
+            else: codigo_serie = 6
 
             if turno == 'Manhã': turno = 0
             elif turno == 'Intermediário': turno = 1
@@ -1765,9 +1944,9 @@ class Ui_Edit_2_Window(object):
 
             if zona == 'Rural': zona = 0
             elif zona == 'Urbana': zona = 1
-            else: zona = 3
+            else: zona = 2
 
-            # IDENTIFICAÇÃO ALUNO
+            #region IDENTIFICAÇÃO_ALUNO
             self.imported_id_aluno = id_aluno
 
             self.imported_nis = nis
@@ -1782,14 +1961,25 @@ class Ui_Edit_2_Window(object):
             self.imported_data_expedicao_id = str(data_expedicao_id)
             self.imported_orgao_emissor = orgao_emissor
             self.imported_uf_identidade = uf_identidade
-            self.imported_cpf = cpf
+            self.imported_cpf = str(cpf)
             self.imported_raca = raca
+
+            #NOVOS
+            self.imported_data_nasc = str(data_nasc)
+            self.imported_tipo_nasc = tipo_nasc
+            self.imported_nacionalidade = nacionalidade
+            self.imported_codigo_inep = str(codigo_inep)
+
+            self.ano_nasc = self.imported_data_nasc.split("-")[0]
+            self.mes_nasc = self.imported_data_nasc.split("-")[1]
+            self.dia_nasc = self.imported_data_nasc.split("-")[2]
 
             self.ano_exp_id = self.imported_data_expedicao_id.split("-")[0]
             self.mes_exp_id = self.imported_data_expedicao_id.split("-")[1]
             self.dia_exp_id = self.imported_data_expedicao_id.split("-")[2]
+            #endregion
 
-            # CERTIDAO
+            #region CERTIDAO
             self.imported_num_matricula_rc = num_matricula_rc
             self.imported_num_termo = num_termo
             self.imported_livro = str(livro)
@@ -1799,8 +1989,9 @@ class Ui_Edit_2_Window(object):
             self.ano_exp_cert = self.imported_data_expedicao_certidao.split("-")[0]
             self.mes_exp_cert = self.imported_data_expedicao_certidao.split("-")[1]
             self.dia_exp_cert = self.imported_data_expedicao_certidao.split("-")[2]
+            #endregion
 
-            # INFORMAÇÕES MATRICULA
+            #region INFORMAÇÕES_MATRICULA
             self.imported_nome_escola = nome_escola
             self.imported_cod_censo = str(cod_censo)
             self.imported_data_ingresso_escola = str(data_ingresso_escola)
@@ -1813,12 +2004,26 @@ class Ui_Edit_2_Window(object):
             self.imported_participa_programa = participa_programa
             self.imported_transporte_escola = transporte_escolar
             self.imported_ano_letivo = str(ano_letivo)
+            self.imported_codigo_aluno = str(codigo_aluno)
+            self.imported_doc_pendente = doc_pendente
 
-            # DADOS PAIS RESPONSAVEL
+            self.ano_ingresso = self.imported_data_ingresso_escola.split("-")[0]
+            self.mes_ingresso = self.imported_data_ingresso_escola.split("-")[1]
+            self.dia_ingresso = self.imported_data_ingresso_escola.split("-")[2]
+
+            self.ano_matricula = self.imported_data_matricula.split("-")[0]
+            self.mes_matricula = self.imported_data_matricula.split("-")[1]
+            self.dia_matricula = self.imported_data_matricula.split("-")[2]
+            #endregion
+
+            #region DADOS_PAIS_RESPONSAVEL
             self.imported_nome_mae = nome_mae
             self.imported_nome_pai = nome_pai
 
-            # SAUDE
+            self.imported_responsavel = responsavel
+            #endregion
+
+            #region SAUDE
             self.imported_autismo = autismo
             self.imported_rett = rett
             self.imported_asperger = asperger
@@ -1833,8 +2038,9 @@ class Ui_Edit_2_Window(object):
             self.imported_surdez = surdez
             self.imported_surdocegueira = surdocegueira
             self.imported_altas_habilidades = altas_habilidades
+            #endregion
 
-            # ENDERECO
+            #region ENDERECO
             self.imported_endereco = endereco
             self.imported_complemento = complemento
             self.imported_num_endereco = str(num_endereco)
@@ -1845,9 +2051,9 @@ class Ui_Edit_2_Window(object):
             self.imported_telefone = str(telefone)
             self.imported_email = email
             self.imported_uf_endereco = uf_endereco
+            #endregion
 
             print("Dados importados.")
-            print(self.imported_num_matricula_rc)
         else:
             print("Arquivo 'dados_editar.pkl' não encontrado.")
 
@@ -1909,7 +2115,6 @@ class Ui_Edit_2_Window(object):
         print("Aluno atualizado com sucesso")
         self.voltar_tela_editar_1()
 
-
     def update_identificacao_aluno_ui(self):
         try:
             nome_aluno = self.nome_aluno.text()
@@ -1920,20 +2125,25 @@ class Ui_Edit_2_Window(object):
             nascimento_municipio = self.nascimento_municipio.text()
             cartorio_uf = self.cartorio_uf.text()
             nome_cartorio = self.cartorio_nome.text()
+            id_doc_pass = self.documento_tipo.text()
             cartorio_municipio = self.cartorio_municipio.text()
-            data_exp_identidade = self.data_expedicao.date().toString("yyyy-MM-dd")
+            data_exp_identidade = self.data_exp.date().toString("yyyy-MM-dd")
             orgao_emissor = self.documento_orgao_emissor.text()
             uf_identidade = self.nascimento_uf.text()
             cpf = self.cpf_aluno.text()
+            data_nascimento = self.data_nascimento.date().toString("yyyy-MM-dd")
+            tipo_nascimento = self.tipo_nascimento.text()
+            nacionalidade = self.nacionalidade.text()
+            codigo_INEP = self.codigo_inep.text()
 
             if not all([nome_aluno, codigo_NIS, raca_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
-                        cartorio_uf, nome_cartorio, cartorio_municipio, data_exp_identidade, orgao_emissor,
-                        uf_identidade, cpf]):
+                        cartorio_uf, nome_cartorio, id_doc_pass, cartorio_municipio, data_exp_identidade, orgao_emissor,
+                        uf_identidade, cpf, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP]):
                 QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos do Identificação do Aluno estão vazios",
                             QMessageBox.StandardButton.Ok).exec()
                 return False
 
-            resultado = update_identificacao_aluno(codigo_NIS, nome_aluno,sexo_aluno, nascimento_uf, nascimento_municipio,cartorio_uf, nome_cartorio, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, self.imported_id_aluno)
+            resultado = update_identificacao_aluno(codigo_NIS, nome_aluno,sexo_aluno, nascimento_uf, nascimento_municipio,cartorio_uf, nome_cartorio, id_doc_pass, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, self.imported_id_aluno)
 
             return True if resultado else False
         except Exception as e:
@@ -1987,13 +2197,14 @@ class Ui_Edit_2_Window(object):
         try:
             nome_pai = self.nome_pai.text()
             nome_mae = self.nome_mae.text()
+            responsavel = self.responsavel.text()
 
             if not all([nome_mae]):
                 QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos Dados dos Pais estão vazios",
                             QMessageBox.StandardButton.Ok).exec()
                 return False
 
-            resultado = update_dados_pais_responsavel(nome_mae, nome_pai, self.imported_id_aluno)
+            resultado = update_dados_pais_responsavel(nome_mae, nome_pai, responsavel, self.imported_id_aluno)
             return True if resultado else False
         except Exception as e:
             print(f"Erro ao inserir dados dos pais ou responsáveis: {e}")
@@ -2003,23 +2214,26 @@ class Ui_Edit_2_Window(object):
         try:
             nome_escola = self.nome_escola.text()
             codigo_turma = self.codigo_turma.text()
-            data_matricula = self.data_matricula.text()
+            data_matricula = self.data_matricula.date().toString("yyyy-MM-dd")
             codigo_inep = self.codigo_inep.text()
             matricula = self.matricula.text()
-            data_ingresso_escola = self.data_ingresso_escola.text()
+            data_ingresso_escola = self.data_ingresso_escola.date().toString("yyyy-MM-dd")
             turno = self.sel_turno.currentText()
             serie = self.sel_serie.currentText()
             codigo_procedencia = self.sel_procedencia.currentText()
             programa_bolsa_familia = self.bolsa_familia.isChecked()
             transporte_escolar = self.transporte.isChecked()
+            ano_letivo = self.ano_letivo.text()
+            codigo_aluno = self.codigo_aluno.text()
+            documento_pendente = self.checkbox_documento_pendente.isChecked()
 
             if not all([nome_escola, codigo_turma, data_matricula, codigo_inep, matricula, data_ingresso_escola,
-                        turno, serie, codigo_procedencia]):
+                        turno, serie, codigo_procedencia, ano_letivo, codigo_aluno]):
                 QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos do Iformações da Matrícula estão vazios",
                             QMessageBox.StandardButton.Ok).exec()
                 return False
 
-            resultado = update_informacoes_matricula(nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, self.imported_id_aluno)
+            resultado = update_informacoes_matricula(nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, self.imported_id_aluno)
 
             return True if resultado else False
         except Exception as e:
