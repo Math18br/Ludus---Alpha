@@ -1910,8 +1910,9 @@ class UI_MatriculaWindow(object):
                 livro = self.livro.text()
                 folha = self.folha.text()
                 data_expedicao_certidao = self.data_expedicao.date().toString("yyyy-MM-dd")
+                tipo_certidao_civil = self.sel_certidao_civil.currentText()
 
-                resultado = insert_certidao(conn, id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao)
+                resultado = insert_certidao(conn, id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil)
                 return True if resultado else False
         except Exception as e:
                 print(f"Erro ao inserir certidão: {e}")

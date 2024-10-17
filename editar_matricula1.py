@@ -262,6 +262,7 @@ class Ui_Edit_1_Window(object):
             livro = tabela[4]
             folha = tabela[5]
             data_expedicao_certidao = tabela[6]
+            tipo_certidao_civil = tabela[7]
             #endregion
 
             #region INFORMAÇÕES_MATRICULA
@@ -377,6 +378,8 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(livro, arquivo)
                 pickle.dump(folha, arquivo)
                 pickle.dump(data_expedicao_certidao, arquivo)
+                pickle.dump(tipo_certidao_civil, arquivo)
+
                 #endregion
 
                 #region INFORMAÇÕES_MATRICULA

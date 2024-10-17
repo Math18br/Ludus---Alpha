@@ -1621,6 +1621,7 @@ class Ui_Edit_2_Window(object):
         self.sel_certidao_civil.setItemText(0, _translate("MainWindow", "Nascimento"))
         self.sel_certidao_civil.setItemText(1, _translate("MainWindow", "Casamento"))
         self.sel_certidao_civil.setItemText(2, _translate("MainWindow", "N/A"))
+        self.sel_certidao_civil.setCurrentIndex(self.imported_tipo_certidao_civil)
 
         self.certidao_antiga.setTitle(_translate("MainWindow", "Certidão Modelo Antigo"))
 
@@ -1863,6 +1864,7 @@ class Ui_Edit_2_Window(object):
                 livro = pickle.load(arquivo)
                 folha = pickle.load(arquivo)
                 data_expedicao_certidao = pickle.load(arquivo)
+                tipo_certidao_civil = pickle.load(arquivo)
 
                 nome_escola = pickle.load(arquivo)
                 cod_censo = pickle.load(arquivo)
@@ -1946,6 +1948,10 @@ class Ui_Edit_2_Window(object):
             elif zona == 'Urbana': zona = 1
             else: zona = 2
 
+            if tipo_certidao_civil == "Nascimento": tipo_certidao_civil = 0
+            elif tipo_certidao_civil == "Casamento": tipo_certidao_civil = 1
+            else: tipo_certidao_civil = 2
+
             #region IDENTIFICAÇÃO_ALUNO
             self.imported_id_aluno = id_aluno
 
@@ -1985,6 +1991,7 @@ class Ui_Edit_2_Window(object):
             self.imported_livro = str(livro)
             self.imported_folha = str(folha)
             self.imported_data_expedicao_certidao = str(data_expedicao_certidao)
+            self.imported_tipo_certidao_civil = tipo_certidao_civil
 
             self.ano_exp_cert = self.imported_data_expedicao_certidao.split("-")[0]
             self.mes_exp_cert = self.imported_data_expedicao_certidao.split("-")[1]
@@ -2247,8 +2254,9 @@ class Ui_Edit_2_Window(object):
             livro = self.livro.text()
             folha = self.folha.text()
             data_expedicao_certidao = self.data_expedicao.date().toString("yyyy-MM-dd")
+            tipo_certidao_civil = self.sel_certidao_civil.currentText()
 
-            resultado = update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, self.imported_id_aluno)
+            resultado = update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil, self.imported_id_aluno)
             return True if resultado else False
         except Exception as e:
             print(f"Erro ao inserir certidão: {e}")

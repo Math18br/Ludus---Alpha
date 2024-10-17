@@ -1,7 +1,5 @@
 from dotenv import load_dotenv
 import psycopg2
-import os
-from datetime import date
 
 load_dotenv()
 
@@ -9,11 +7,11 @@ load_dotenv()
 def connect_db():
     try:
         conn = psycopg2.connect(
-            host=os.getenv('DB_HOST'),
-            dbname=os.getenv('DB_NAME'),
-            user=os.getenv('DB_USER'),
-            password=os.getenv('DB_PASS'),
-            port=os.getenv('DB_PORT')
+            host='localhost',
+            dbname='escola',
+            user='postgres',
+            password='nizocreo',
+            port='5432'
         )
         return conn
     except psycopg2.OperationalError as e:
@@ -205,13 +203,13 @@ def insert_identificacao_aluno(conn, nis, nome_aluno, sexo_aluno, nascimento_uf,
     return id_aluno
 
 
-def insert_certidao(conn, id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao):
+def insert_certidao(conn, id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil):
     query = """
         INSERT INTO certidao 
-        (id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        (id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
-    parametros = (id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao)
+    parametros = (id_aluno, num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil)
     return executar_query(conn, query, parametros)
 
 
@@ -377,14 +375,14 @@ def update_identificacao_aluno(nis, nome_aluno, sexo_aluno, nascimento_uf, nasci
               orgao_emissor, uf_identidade, cpf, raca_aluno, cartorio_municipio, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP,id_aluno)
     return executar_query_freq(query, parametros)
 
-def update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, id_aluno):
+def update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil, id_aluno):
 
     query = """
         UPDATE certidao 
-        SET num_matricula_registro_civil = %s, num_termo = %s, livro = %s, folha = %s, data_expedicao_certidao = %s
+        SET num_matricula_registro_civil = %s, num_termo = %s, livro = %s, folha = %s, data_expedicao_certidao = %s, tipo_certidao_civil = %s
         WHERE id_aluno = %s
     """
-    parametros = (num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, id_aluno)
+    parametros = (num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil, id_aluno)
     return executar_query_freq(query, parametros)
 
 
