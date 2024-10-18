@@ -141,7 +141,6 @@ class Ui_Edit_1_Window(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Editar Matrícula do Aluno"))
-        #self.confirm_button.setText(_translate("MainWindow", "Confirmar"))
         self.cancel_button.setText(_translate("MainWindow", "Cancelar"))
         self.title_label.setText(_translate("MainWindow", "<html><head/><body><p>alunos</p></body></html>"))
         self.refresh_button.setText(_translate("MainWindow", "Atualizar"))
@@ -242,11 +241,11 @@ class Ui_Edit_1_Window(object):
             uf_identidade = tabela[12]
             cpf = tabela[13]
             raca = tabela[14]
-
             data_nasc = tabela[15]
             tipo_nasc = tabela[16]
             nacionalidade = tabela[17]
             codigo_inep = tabela[18]
+            cartao_sus = tabela[19]
             #endregion
 
             #region CERTIDÃO
@@ -285,9 +284,10 @@ class Ui_Edit_1_Window(object):
             participa_programa = tabela[11]
             transporte_escolar = tabela[12]
             ano_letivo = tabela[13]
-
             codigo_aluno = tabela[14]
             doc_pendente = tabela[15]
+            transferencia = tabela[16]
+            ressalvas = tabela[17]
             #endregion
 
             #region DADOS_PAIS_RESPONSAVEL
@@ -299,8 +299,9 @@ class Ui_Edit_1_Window(object):
             tabela = cur.fetchone()
             nome_mae = tabela[2]
             nome_pai = tabela[3]
-
             responsavel = tabela[4]
+            cpf_responsavel = tabela[5]
+            rg_responsavel = tabela[6]
 
             #endregion
 
@@ -326,6 +327,7 @@ class Ui_Edit_1_Window(object):
             surdez = tabela[13]
             surdocegueira = tabela[14]
             altas_habilidades = tabela[15]
+            vacina = tabela[16]
             #endregion
 
             #region ENDERECO
@@ -365,11 +367,11 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(uf_identidade, arquivo)
                 pickle.dump(cpf, arquivo)
                 pickle.dump(raca, arquivo)
-
                 pickle.dump(data_nasc, arquivo)
                 pickle.dump(tipo_nasc, arquivo)
                 pickle.dump(nacionalidade, arquivo)
                 pickle.dump(codigo_inep, arquivo)
+                pickle.dump(cartao_sus, arquivo)
                 #endregion
 
                 #region CERTIDÃO
@@ -395,16 +397,18 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(participa_programa, arquivo)
                 pickle.dump(transporte_escolar, arquivo)
                 pickle.dump(ano_letivo, arquivo)
-
                 pickle.dump(codigo_aluno, arquivo)
                 pickle.dump(doc_pendente, arquivo)
+                pickle.dump(transferencia, arquivo)
+                pickle.dump(ressalvas, arquivo)
                 #endregion
 
                 #region DADOS PAIS_RESPONSAVEL
                 pickle.dump(nome_mae, arquivo)
                 pickle.dump(nome_pai, arquivo)
-
                 pickle.dump(responsavel, arquivo)
+                pickle.dump(cpf_responsavel, arquivo)
+                pickle.dump(rg_responsavel, arquivo)
                 #endregion
 
                 #region SAUDE
@@ -422,6 +426,8 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(surdez, arquivo)
                 pickle.dump(surdocegueira, arquivo)
                 pickle.dump(altas_habilidades, arquivo)
+                pickle.dump(vacina, arquivo)
+
                 #endregion
 
                 #region ENDERECO
@@ -449,8 +455,6 @@ class Ui_Edit_1_Window(object):
         for index in range(self.lista_alunos.count()):
             item = self.lista_alunos.item(index)
 
-           #print(item)
-
             if item.checkState() == Qt.CheckState.Checked:
 
                 matricula, nome_aluno = item.text().split(' - ')
@@ -463,7 +467,7 @@ class Ui_Edit_1_Window(object):
                     print(f"Não foi possível encontrar o ID para a matrícula {matricula}")
 
             else:
-                print(f"Nenhum item selecionado")
+                print(f"Item não selecionado")
 
     def excluir_aluno(self):
         for index in range(self.lista_alunos.count()):

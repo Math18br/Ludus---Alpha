@@ -169,6 +169,7 @@ def atualizar_diario_classe(data):
 
 #endregion
 
+
 #region INSERTS
 def insert_cadastro_sistema(login,nome_prof,senha):
 
@@ -181,20 +182,20 @@ def insert_cadastro_sistema(login,nome_prof,senha):
     parametros = (login, nome_prof, senha)
     return executar_query_freq(query, parametros)
 
-def insert_identificacao_aluno(conn, nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio, cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade, orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP):
+def insert_identificacao_aluno(conn, nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio, cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade, orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, cartao_sus):
     query = """
         INSERT INTO identificacao_aluno 
         (NIS, nome_aluno, sexo, UF, local_nascimento_municipio,
          uf_cartorio, nome_cartorio, identidade_docEstrangeiro_passaporte, data_expedicao_identidade,
          orgao_emissor, uf_identidade, cpf, aluno_raca, municipio_cartorio,
-         data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+         data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, cartao_sus)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id_aluno;
     """
     parametros = (nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
                   cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade,
                   orgao_emissor, uf_identidade, cpf, raca_aluno, municipio_cartorio,
-                  data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP)
+                  data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, cartao_sus)
     
     cur = conn.cursor()
     cur.execute(query, parametros)
@@ -215,20 +216,20 @@ def insert_certidao(conn, id_aluno, num_matricula_registro_civil, num_termo, liv
 
 def insert_saude(conn, id_aluno, autismo, rett, asperger, transtorno_desintegrativo,
                  baixa_visao, cegueira, auditiva, intelectual, fisica,
-                 multipla, sindrome_down, surdez, surdocegueira, altas_habilidades):
+                 multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, vacina):
     query = """
         INSERT INTO saude (id_aluno, autismo, rett, asperger, transtorno_desintegrativo,
                            baixa_visao, cegueira, auditiva, intelectual, fisica,
-                           multipla, sindrome_down, surdez, surdocegueira, altas_habilidades)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                           multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, vacina)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     parametros = (id_aluno, autismo, rett, asperger, transtorno_desintegrativo,
                   baixa_visao, cegueira, auditiva, intelectual, fisica,
-                  multipla, sindrome_down, surdez, surdocegueira, altas_habilidades)
+                  multipla, sindrome_down, surdez, surdocegueira, altas_habilidades,vacina)
     """
     print("Debugging insert_saude:", id_aluno, autismo, rett, asperger, transtorno_desintegrativo,
       baixa_visao, cegueira, auditiva, intelectual, fisica,
-      multipla, sindrome_down, surdez, surdocegueira, altas_habilidades)
+      multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, vacina)
     """
     return executar_query(conn, query, parametros)
 
@@ -242,24 +243,24 @@ def insert_endereco(conn, id_aluno, endereco, complemento, numero_endereco, muni
     return executar_query(conn, query, parametros)
 
 
-def insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai, responsavel):
+def insert_dados_pais_responsavel(conn, id_aluno, nome_mae, nome_pai, responsavel, cpf_responsavel, rg_responsavel):
     query = """
         INSERT INTO dados_pais_responsavel 
-        (id_aluno, nome_mae, nome_pai, responsavel)
-        VALUES (%s, %s, %s, %s)
+        (id_aluno, nome_mae, nome_pai, responsavel, cpf_responsavel, rg_responsavel)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """
-    parametros = (id_aluno, nome_mae, nome_pai, responsavel)
+    parametros = (id_aluno, nome_mae, nome_pai, responsavel, cpf_responsavel, rg_responsavel)
     return executar_query(conn, query, parametros)
 
 
-def insert_informacoes_matricula(conn, id_aluno, nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente):
+def insert_informacoes_matricula(conn, id_aluno, nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, transferencia, ressalvas):
     query = """
         INSERT INTO informacoes_matricula
-        (id_aluno, nome_escola, cod_censo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        (id_aluno, nome_escola, cod_censo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, transferencia, ressalvas)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     parametros = (id_aluno, nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula,
-                  codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente)
+                  codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, transferencia, ressalvas)
     
     return executar_query(conn, query, parametros)
 
@@ -363,16 +364,16 @@ def update_controle(total_dias,mes,ano):
         insert_controle(ano)
         update_controle(total_dias, mes, obter_ano())
 
-def update_identificacao_aluno(nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio, cartorio_uf, nome_cartorio, id_doc_passaporte, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, id_aluno):
+def update_identificacao_aluno(nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio, cartorio_uf, nome_cartorio, id_doc_passaporte, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, cartao_sus, id_aluno):
 
     query = """
         UPDATE identificacao_aluno 
-        SET NIS = %s, nome_aluno = %s, sexo = %s, UF = %s, local_nascimento_municipio = %s, uf_cartorio = %s, nome_cartorio = %s, identidade_docEstrangeiro_passaporte = %s, data_expedicao_identidade = %s, orgao_emissor = %s, uf_identidade = %s, cpf = %s, aluno_raca = %s, municipio_cartorio = %s, data_nascimento = %s, tipo_nascimento = %s, nacionalidade = %s, codigo_INEP = %s
+        SET NIS = %s, nome_aluno = %s, sexo = %s, UF = %s, local_nascimento_municipio = %s, uf_cartorio = %s, nome_cartorio = %s, identidade_docEstrangeiro_passaporte = %s, data_expedicao_identidade = %s, orgao_emissor = %s, uf_identidade = %s, cpf = %s, aluno_raca = %s, municipio_cartorio = %s, data_nascimento = %s, tipo_nascimento = %s, nacionalidade = %s, codigo_INEP = %s, cartao_sus = %s
         WHERE id_aluno = %s
     """
     parametros = (nis, nome_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
               cartorio_uf, nome_cartorio, id_doc_passaporte, data_exp_identidade,
-              orgao_emissor, uf_identidade, cpf, raca_aluno, cartorio_municipio, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP,id_aluno)
+              orgao_emissor, uf_identidade, cpf, raca_aluno, cartorio_municipio, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, cartao_sus, id_aluno)
     return executar_query_freq(query, parametros)
 
 def update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_expedicao_certidao, tipo_certidao_civil, id_aluno):
@@ -386,33 +387,33 @@ def update_certidao(num_matricula_registro_civil, num_termo, livro, folha, data_
     return executar_query_freq(query, parametros)
 
 
-def update_informacoes_matricula(nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, id_aluno):
+def update_informacoes_matricula(nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula, codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, transferencia, ressalvas, id_aluno):
     query = """
         UPDATE informacoes_matricula
-        SET nome_escola = %s, cod_censo_inep = %s, data_ingresso_escola = %s, matricula = %s, data_matricula = %s, codigo_turma = %s, participa_programa = %s, transporte_escolar = %s, turno = %s, codigo_serie = %s, codigo_procedencia = %s, ano_letivo = %s, codigo_aluno = %s, documento_pendente = %s 
+        SET nome_escola = %s, cod_censo_inep = %s, data_ingresso_escola = %s, matricula = %s, data_matricula = %s, codigo_turma = %s, participa_programa = %s, transporte_escolar = %s, turno = %s, codigo_serie = %s, codigo_procedencia = %s, ano_letivo = %s, codigo_aluno = %s, documento_pendente = %s, transferencia = %s, ressalvas = %s 
         WHERE id_aluno = %s
     """
     parametros = (nome_escola, cod_censo, data_ingresso_escola, matricula, data_matricula,
-                  codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, id_aluno)
+                  codigo_turma, participa_programa, transporte_escolar, turno, codigo_serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, transferencia, ressalvas, id_aluno)
 
     return executar_query_freq(query, parametros)
 
-def update_dados_pais_responsavel(nome_mae, nome_pai, responsavel, id_aluno):
+def update_dados_pais_responsavel(nome_mae, nome_pai, responsavel, cpf_responsavel, rg_responsavel, id_aluno):
     query = """
         UPDATE dados_pais_responsavel 
-        SET nome_mae = %s, nome_pai = %s, responsavel = %s
+        SET nome_mae = %s, nome_pai = %s, responsavel = %s, cpf_responsavel = %s, rg_responsavel = %s
         WHERE id_aluno = %s
     """
-    parametros = (nome_mae, nome_pai, responsavel, id_aluno)
+    parametros = (nome_mae, nome_pai, responsavel, cpf_responsavel, rg_responsavel, id_aluno)
     return executar_query_freq(query, parametros)
 
-def update_saude(autismo, rett, asperger, transtorno_desintegrativo, baixa_visao, cegueira, auditiva, intelectual, fisica, multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, id_aluno):
+def update_saude(autismo, rett, asperger, transtorno_desintegrativo, baixa_visao, cegueira, auditiva, intelectual, fisica, multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, vacina, id_aluno):
     query = """
         UPDATE saude 
-        SET autismo = %s, rett = %s, asperger = %s, transtorno_desintegrativo = %s, baixa_visao = %s, cegueira = %s, auditiva = %s, intelectual = %s, fisica = %s, multipla = %s, sindrome_down = %s, surdez = %s, surdocegueira = %s, altas_habilidades = %s
+        SET autismo = %s, rett = %s, asperger = %s, transtorno_desintegrativo = %s, baixa_visao = %s, cegueira = %s, auditiva = %s, intelectual = %s, fisica = %s, multipla = %s, sindrome_down = %s, surdez = %s, surdocegueira = %s, altas_habilidades = %s, vacina = %s
         WHERE id_aluno = %s
     """
-    parametros = (autismo, rett, asperger, transtorno_desintegrativo, baixa_visao, cegueira, auditiva, intelectual, fisica, multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, id_aluno)
+    parametros = (autismo, rett, asperger, transtorno_desintegrativo, baixa_visao, cegueira, auditiva, intelectual, fisica, multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, vacina, id_aluno)
     return executar_query_freq(query, parametros)
 
 def update_endereco(endereco, complemento, numero_endereco, municipio, bairro, cep, zona, telefone, email, uf, id_aluno):

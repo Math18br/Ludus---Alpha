@@ -70,7 +70,7 @@ class Ui_Edit_2_Window(object):
         self.nome_aluno.setObjectName("nome_aluno")
         self.verticalLayout_3.addWidget(self.nome_aluno)
 
-        validador = QtGui.QIntValidator()
+        validador = QtGui.QRegularExpressionValidator(QtCore.QRegularExpression(r"\d+"))
         cpf_regex = QRegularExpression("^\\d{11}$")
         cpf_validador = QRegularExpressionValidator(cpf_regex)
 
@@ -94,6 +94,7 @@ class Ui_Edit_2_Window(object):
         self.codigo_NIS.setMaxLength(255)
         self.codigo_NIS.setClearButtonEnabled(True)
         self.codigo_NIS.setObjectName("codigo_NIS")
+        self.codigo_NIS.setValidator(validador)
         self.verticalLayout_3.addWidget(self.codigo_NIS)
 
         # ID do aluno INEP
@@ -315,6 +316,7 @@ class Ui_Edit_2_Window(object):
         self.data_nascimento.setObjectName("data_nascimento")
         self.verticalLayout_3.addWidget(self.data_nascimento)
 
+
         self.label_certidao_civil = QtWidgets.QLabel(parent=self.id_aluno)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -506,7 +508,36 @@ class Ui_Edit_2_Window(object):
         self.cpf_aluno.setMaxLength(15)
         self.cpf_aluno.setClearButtonEnabled(False)
         self.cpf_aluno.setObjectName("cpf_aluno")
+        self.cpf_aluno.setValidator(cpf_validador)
         self.gridLayout_4.addWidget(self.cpf_aluno, 4, 0, 1, 1)
+
+        # Cartao SUS
+
+        self.cartao_sus = QtWidgets.QLineEdit(parent=self.info_documentos)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.cartao_sus.setFont(font)
+        self.cartao_sus.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                      "border-style: outset;\n"
+                                      "border-width: 1px;\n"
+                                      "border-radius: 2px;\n"
+                                      "border-color:  rgb(203, 132, 0);\n"
+                                      "font: 12px \"Inter Medium\" ;\n"
+                                      "color: black\n"
+                                      "\n"
+                                      "")
+        self.cartao_sus.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhUppercaseOnly)
+        self.cartao_sus.setText("")
+        self.cartao_sus.setMaxLength(15)
+        self.cartao_sus.setClearButtonEnabled(False)
+        self.cartao_sus.setObjectName("carto_sus")
+        self.cartao_sus.setValidator(validador)
+        self.gridLayout_4.addWidget(self.cartao_sus, 5, 0, 1, 1)
+
         self.documento_tipo = QtWidgets.QLineEdit(parent=self.info_documentos)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -982,6 +1013,27 @@ class Ui_Edit_2_Window(object):
         self.codigo_aluno.setObjectName("codigo_aluno")
         self.codigo_aluno.setPlaceholderText("Código do Aluno")
         self.verticalLayout_5.addWidget(self.codigo_aluno)
+        self.gridLayout_5.addWidget(self.codigo_aluno, 6, 0, 1, 3)
+
+        # Transferencia
+
+        self.transferencia = QtWidgets.QLineEdit(parent=self.InformacoesdeMatricula)
+        self.transferencia.setMinimumSize(QtCore.QSize(0, 0))
+        self.transferencia.setFont(font)
+        self.transferencia.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                         "border-style: outset;\n"
+                                         "border-width: 1px;\n"
+                                         "border-radius: 2px;\n"
+                                         "border-color: rgb(203, 132, 0);\n"
+                                         "font: 12px \"Inter Medium\" ;\n"
+                                         "color: black;")
+        self.transferencia.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDigitsOnly)
+        self.transferencia.setMaxLength(200)
+        self.transferencia.setClearButtonEnabled(True)
+        self.transferencia.setObjectName("transferencia")
+        self.transferencia.setPlaceholderText("Transferência")
+        self.verticalLayout_5.addWidget(self.transferencia)
+        self.gridLayout_5.addWidget(self.transferencia, 7, 0, 1, 8)
 
         # Documento Pendente?
         self.checkbox_documento_pendente = QtWidgets.QCheckBox("Documento Pendente?", parent=self.groupBox)
@@ -992,8 +1044,6 @@ class Ui_Edit_2_Window(object):
                                                        "\n"
                                                        "")
         self.verticalLayout_5.addWidget(self.checkbox_documento_pendente)
-
-        self.gridLayout_5.addWidget(self.codigo_aluno, 6, 0, 1, 3)
         self.gridLayout_5.addWidget(self.checkbox_documento_pendente, 6, 5, 1, 1)
 
         self.nome_pai = QtWidgets.QLineEdit(parent=self.groupBox)
@@ -1064,6 +1114,58 @@ class Ui_Edit_2_Window(object):
         self.responsavel.setObjectName("responsavel")
         self.responsavel.setPlaceholderText("Responsável")
         self.verticalLayout_5.addWidget(self.responsavel)
+
+        # CPF responsavel
+
+        self.cpf_responsavel = QtWidgets.QLineEdit(parent=self.groupBox)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.cpf_responsavel.setFont(font)
+        self.cpf_responsavel.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                           "border-style: outset;\n"
+                                           "border-width: 1px;\n"
+                                           "border-radius: 2px;\n"
+                                           "border-color:  rgb(203, 132, 0);\n"
+                                           "font: 12px \"Inter Medium\" ;\n"
+                                           "color: black\n"
+                                           "\n"
+                                           "")
+        self.cpf_responsavel.setMaxLength(255)
+        self.cpf_responsavel.setClearButtonEnabled(True)
+        self.cpf_responsavel.setObjectName("cpf_responsavel")
+        self.cpf_responsavel.setValidator(cpf_validador)
+        self.cpf_responsavel.setPlaceholderText("CPF do Responsável")
+        self.verticalLayout_5.addWidget(self.cpf_responsavel)
+
+        # RG responsavel
+
+        self.rg_responsavel = QtWidgets.QLineEdit(parent=self.groupBox)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.rg_responsavel.setFont(font)
+        self.rg_responsavel.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                          "border-style: outset;\n"
+                                          "border-width: 1px;\n"
+                                          "border-radius: 2px;\n"
+                                          "border-color:  rgb(203, 132, 0);\n"
+                                          "font: 12px \"Inter Medium\" ;\n"
+                                          "color: black\n"
+                                          "\n"
+                                          "")
+        self.rg_responsavel.setMaxLength(7)
+        self.rg_responsavel.setClearButtonEnabled(True)
+        self.rg_responsavel.setObjectName("rg_responsavel")
+        self.rg_responsavel.setValidator(validador)
+        self.rg_responsavel.setPlaceholderText("RG do Responsável")
+        self.verticalLayout_5.addWidget(self.rg_responsavel)
 
         self.verticalLayout_6.addWidget(self.groupBox)
         self.frame = QtWidgets.QFrame(parent=self.scrollAreaWidgetContents_2)
@@ -1276,6 +1378,40 @@ class Ui_Edit_2_Window(object):
         self.verticalLayout_7.addWidget(self.def_surdocegueira)
         self.gridLayout_6.addWidget(self.deficiencias, 0, 1, 2, 1)
         self.verticalLayout_6.addWidget(self.frame)
+
+        # Vacina
+        self.label_vacina = QtWidgets.QLabel(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(7)
+        self.label_vacina.setFont(font)
+        self.label_vacina.setStyleSheet("color: rgb(203, 132, 0);\n"
+                                        "font: 57 10pt \"Inter Medium\";")
+        self.label_vacina.setObjectName("label_vacina")
+        self.verticalLayout_6.addWidget(self.label_vacina)
+
+        self.sel_vacina = QtWidgets.QComboBox(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        self.sel_vacina.setFont(font)
+        self.sel_vacina.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                      "border-style: outset;\n"
+                                      "border-width: 1px;\n"
+                                      "border-radius: 2px;\n"
+                                      "border-color:  rgb(203, 132, 0);\n"
+                                      "font: 12px \"Inter Medium\" ;\n"
+                                      "color: black\n"
+                                      "\n"
+                                      "")
+        self.sel_vacina.setObjectName("sel_vacina")
+        self.sel_vacina.addItem("")
+        self.sel_vacina.addItem("")
+        self.sel_vacina.addItem("")
+        self.verticalLayout_6.addWidget(self.sel_vacina)
+
         self.caixa_endereco = QtWidgets.QGroupBox(parent=self.scrollAreaWidgetContents_2)
         font = QtGui.QFont()
         font.setFamily("Inter Medium")
@@ -1519,6 +1655,45 @@ class Ui_Edit_2_Window(object):
         self.gridLayout_7.addWidget(self.email, 5, 5, 1, 1)
         self.verticalLayout_6.addWidget(self.caixa_endereco)
         self.verticalLayout_9.addLayout(self.verticalLayout_6)
+
+        # Ressalvas
+        self.label_ressalvas = QtWidgets.QLabel(parent=self.id_aluno)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(7)
+        self.label_ressalvas.setFont(font)
+        self.label_ressalvas.setStyleSheet("color: rgb(203, 132, 0);\n"
+                                           "font: 57 10pt \"Inter Medium\";")
+        self.label_ressalvas.setObjectName("label_ressalvas")
+        self.verticalLayout_9.addWidget(self.label_ressalvas)
+
+        self.ressalvas = QtWidgets.QLineEdit(parent=self.groupBox)
+        font = QtGui.QFont()
+        font.setFamily("Inter Medium")
+        font.setPointSize(11)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.ressalvas.setFont(font)
+        self.ressalvas.setStyleSheet("background-color: rgb(243, 230, 213); \n"
+                                     "border-style: outset;\n"
+                                     "border-width: 2px;\n"
+                                     "border-radius: 2px;\n"
+                                     "border-color:  rgb(203, 132, 0);\n"
+                                     "font: 12px \"Inter Medium\" ;\n"
+                                     "color: black\n"
+                                     "\n"
+                                     "")
+        self.ressalvas.setMaxLength(255)
+        self.ressalvas.setClearButtonEnabled(True)
+        self.ressalvas.setObjectName("ressalvas")
+        self.ressalvas.setPlaceholderText("Ressalvas")
+        self.verticalLayout_9.addWidget(self.ressalvas)
+
+
         self.scrollArea.setWidget(self.scrollAreaWidgetContents_2)
         self.confirm_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked=lambda: self.atualiza_aluno())
         self.confirm_button.setGeometry(QtCore.QRect(580, 640, 136, 71))
@@ -1649,6 +1824,9 @@ class Ui_Edit_2_Window(object):
         self.cpf_aluno.setPlaceholderText(_translate("MainWindow", "Cadastro de Pessoa Física (CPF)"))
         self.cpf_aluno.setText(_translate("MainWindow", self.imported_cpf))
 
+        self.cartao_sus.setPlaceholderText(_translate("MainWindow", "Cartão SUS"))
+        self.cartao_sus.setText(_translate("MainWindow", self.imported_cartao_sus))
+
         self.documento_tipo.setPlaceholderText(_translate("MainWindow", "Identidade, Documento Estrangerio ou Passaporte"))
         self.documento_tipo.setText(_translate("MainWindow", self.imported_identidade_doc_pass))
 
@@ -1713,6 +1891,8 @@ class Ui_Edit_2_Window(object):
 
         self.codigo_aluno.setText(_translate("MainWindow", self.imported_codigo_aluno))
 
+        self.transferencia.setText(_translate("MainWindow", self.imported_transferencia))
+
         self.codigo_inep.setPlaceholderText(_translate("MainWindow", "Codigo Senso Inep*"))
         self.codigo_inep.setText(_translate("MainWindow", self.imported_cod_censo))
 
@@ -1744,6 +1924,17 @@ class Ui_Edit_2_Window(object):
         self.nome_mae.setText(_translate("MainWindow", self.imported_nome_mae))
 
         self.responsavel.setText(_translate("MainWindow", self.imported_responsavel))
+
+        self.cpf_responsavel.setText(_translate("MainWindow", self.imported_cpf_responsavel))
+
+        self.rg_responsavel.setText(_translate("MainWindow", self.imported_rg_responsavel))
+
+        # Tradução Vacina
+        self.label_vacina.setText(_translate("MainWindow", "Vacina"))
+        self.sel_vacina.setItemText(0, _translate("MainWindow", "Completa"))
+        self.sel_vacina.setItemText(1, _translate("MainWindow", "Incompleta"))
+        self.sel_vacina.setItemText(2, _translate("MainWindow", "Não entregue"))
+        self.sel_vacina.setCurrentIndex(self.imported_vacina)
 
         self.transtorno_global_desenvolvimento.setTitle(_translate("MainWindow", "Transtorno Global do Desenvolvimento"))
 
@@ -1830,6 +2021,9 @@ class Ui_Edit_2_Window(object):
         self.email.setPlaceholderText(_translate("MainWindow", "Email"))
         self.email.setText(_translate("MainWindow", self.imported_email))
 
+        self.label_ressalvas.setText(_translate("MainWindow", "Ressalvas"))
+        self.ressalvas.setText(_translate("MainWindow", self.imported_ressalvas))
+
         self.confirm_button.setText(_translate("MainWindow", "Confirmar"))
         self.cancel_button.setText(_translate("MainWindow", "Cancelar"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\">Atualizar perfil</p></body></html>"))
@@ -1858,6 +2052,7 @@ class Ui_Edit_2_Window(object):
                 tipo_nasc = pickle.load(arquivo)
                 nacionalidade = pickle.load(arquivo)
                 codigo_inep = pickle.load(arquivo)
+                cartao_sus = pickle.load(arquivo)
 
                 num_matricula_rc = pickle.load(arquivo)
                 num_termo = pickle.load(arquivo)
@@ -1880,10 +2075,14 @@ class Ui_Edit_2_Window(object):
                 ano_letivo = pickle.load(arquivo)
                 codigo_aluno = pickle.load(arquivo)
                 doc_pendente = pickle.load(arquivo)
+                transferencia = pickle.load(arquivo)
+                ressalvas = pickle.load(arquivo)
 
                 nome_mae = pickle.load(arquivo)
                 nome_pai = pickle.load(arquivo)
                 responsavel = pickle.load(arquivo)
+                cpf_responsavel = pickle.load(arquivo)
+                rg_responsavel = pickle.load(arquivo)
 
                 autismo = pickle.load(arquivo)
                 rett = pickle.load(arquivo)
@@ -1899,6 +2098,7 @@ class Ui_Edit_2_Window(object):
                 surdez = pickle.load(arquivo)
                 surdocegueira = pickle.load(arquivo)
                 altas_habilidades = pickle.load(arquivo)
+                vacina = pickle.load(arquivo)
 
                 endereco = pickle.load(arquivo)
                 complemento = pickle.load(arquivo)
@@ -1912,9 +2112,13 @@ class Ui_Edit_2_Window(object):
                 uf_endereco = pickle.load(arquivo)
 
 
+            if vacina == 'Completa': vacina = 0
+            elif vacina == 'Incompleta': vacina = 1
+            else: vacina = 2
+
             if sexo == 'Masculino': sexo = 0
             elif sexo == 'Feminino': sexo = 1
-            else: sexo = 3
+            else: sexo = 2
 
             if raca == '1- Branca': raca = 0
             elif raca == '2- Preta': raca = 1
@@ -1969,12 +2173,13 @@ class Ui_Edit_2_Window(object):
             self.imported_uf_identidade = uf_identidade
             self.imported_cpf = str(cpf)
             self.imported_raca = raca
-
-            #NOVOS
             self.imported_data_nasc = str(data_nasc)
             self.imported_tipo_nasc = tipo_nasc
             self.imported_nacionalidade = nacionalidade
             self.imported_codigo_inep = str(codigo_inep)
+
+            if cartao_sus != None: self.imported_cartao_sus = str(cartao_sus)
+            else: self.imported_cartao_sus = None
 
             self.ano_nasc = self.imported_data_nasc.split("-")[0]
             self.mes_nasc = self.imported_data_nasc.split("-")[1]
@@ -2013,6 +2218,8 @@ class Ui_Edit_2_Window(object):
             self.imported_ano_letivo = str(ano_letivo)
             self.imported_codigo_aluno = str(codigo_aluno)
             self.imported_doc_pendente = doc_pendente
+            self.imported_transferencia = transferencia
+            self.imported_ressalvas = ressalvas
 
             self.ano_ingresso = self.imported_data_ingresso_escola.split("-")[0]
             self.mes_ingresso = self.imported_data_ingresso_escola.split("-")[1]
@@ -2026,8 +2233,14 @@ class Ui_Edit_2_Window(object):
             #region DADOS_PAIS_RESPONSAVEL
             self.imported_nome_mae = nome_mae
             self.imported_nome_pai = nome_pai
-
             self.imported_responsavel = responsavel
+
+            if cpf_responsavel != None: self.imported_cpf_responsavel = str(cpf_responsavel)
+            else: self.imported_cpf_responsavel = None
+
+            if rg_responsavel != None: self.imported_rg_responsavel = str(rg_responsavel)
+            else: self.imported_rg_responsavel = None
+
             #endregion
 
             #region SAUDE
@@ -2045,6 +2258,7 @@ class Ui_Edit_2_Window(object):
             self.imported_surdez = surdez
             self.imported_surdocegueira = surdocegueira
             self.imported_altas_habilidades = altas_habilidades
+            self.imported_vacina = vacina
             #endregion
 
             #region ENDERECO
@@ -2142,6 +2356,7 @@ class Ui_Edit_2_Window(object):
             tipo_nascimento = self.tipo_nascimento.text()
             nacionalidade = self.nacionalidade.text()
             codigo_INEP = self.codigo_inep.text()
+            cartao_sus = self.cartao_sus.text()
 
             if not all([nome_aluno, codigo_NIS, raca_aluno, sexo_aluno, nascimento_uf, nascimento_municipio,
                         cartorio_uf, nome_cartorio, id_doc_pass, cartorio_municipio, data_exp_identidade, orgao_emissor,
@@ -2150,7 +2365,7 @@ class Ui_Edit_2_Window(object):
                             QMessageBox.StandardButton.Ok).exec()
                 return False
 
-            resultado = update_identificacao_aluno(codigo_NIS, nome_aluno,sexo_aluno, nascimento_uf, nascimento_municipio,cartorio_uf, nome_cartorio, id_doc_pass, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, self.imported_id_aluno)
+            resultado = update_identificacao_aluno(codigo_NIS, nome_aluno,sexo_aluno, nascimento_uf, nascimento_municipio,cartorio_uf, nome_cartorio, id_doc_pass, cartorio_municipio, data_exp_identidade,orgao_emissor, uf_identidade, cpf, raca_aluno, data_nascimento, tipo_nascimento, nacionalidade, codigo_INEP, cartao_sus, self.imported_id_aluno)
 
             return True if resultado else False
         except Exception as e:
@@ -2173,8 +2388,9 @@ class Ui_Edit_2_Window(object):
             surdez = self.def_surdez.isChecked()
             surdocegueira = self.def_surdocegueira.isChecked()
             altas_habilidades = self.altas_habilidades.isChecked()
+            vacina = self.sel_vacina.currentText()
 
-            resultado = update_saude(autismo, rett, asperger, transtorno_desintegrativo,baixa_visao, cegueira, auditiva, intelectual, fisica,multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, self.imported_id_aluno)
+            resultado = update_saude(autismo, rett, asperger, transtorno_desintegrativo,baixa_visao, cegueira, auditiva, intelectual, fisica,multipla, sindrome_down, surdez, surdocegueira, altas_habilidades, vacina, self.imported_id_aluno)
 
             return True if resultado else False
         except Exception as e:
@@ -2205,13 +2421,15 @@ class Ui_Edit_2_Window(object):
             nome_pai = self.nome_pai.text()
             nome_mae = self.nome_mae.text()
             responsavel = self.responsavel.text()
+            cpf_responsavel = self.cpf_responsavel.text()
+            rg_responsavel = self.rg_responsavel.text()
 
             if not all([nome_mae]):
                 QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos Dados dos Pais estão vazios",
                             QMessageBox.StandardButton.Ok).exec()
                 return False
 
-            resultado = update_dados_pais_responsavel(nome_mae, nome_pai, responsavel, self.imported_id_aluno)
+            resultado = update_dados_pais_responsavel(nome_mae, nome_pai, responsavel, cpf_responsavel, rg_responsavel, self.imported_id_aluno)
             return True if resultado else False
         except Exception as e:
             print(f"Erro ao inserir dados dos pais ou responsáveis: {e}")
@@ -2233,14 +2451,16 @@ class Ui_Edit_2_Window(object):
             ano_letivo = self.ano_letivo.text()
             codigo_aluno = self.codigo_aluno.text()
             documento_pendente = self.checkbox_documento_pendente.isChecked()
+            transferencia = self.transferencia.text()
+            ressalvas = self.ressalvas.text()
 
             if not all([nome_escola, codigo_turma, data_matricula, codigo_inep, matricula, data_ingresso_escola,
-                        turno, serie, codigo_procedencia, ano_letivo, codigo_aluno]):
-                QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos do Iformações da Matrícula estão vazios",
+                        turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, transferencia]):
+                QMessageBox(QMessageBox.Icon.Warning, "Erro", "Alguns campos do Informações da Matrícula estão vazios",
                             QMessageBox.StandardButton.Ok).exec()
                 return False
 
-            resultado = update_informacoes_matricula(nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, self.imported_id_aluno)
+            resultado = update_informacoes_matricula(nome_escola, codigo_inep, data_ingresso_escola, matricula, data_matricula, codigo_turma, programa_bolsa_familia, transporte_escolar, turno, serie, codigo_procedencia, ano_letivo, codigo_aluno, documento_pendente, transferencia, ressalvas, self.imported_id_aluno)
 
             return True if resultado else False
         except Exception as e:

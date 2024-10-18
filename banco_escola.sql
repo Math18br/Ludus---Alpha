@@ -15,8 +15,10 @@ CREATE TABLE identificacao_aluno (
     cpf VARCHAR(11),
 	aluno_raca varchar(50)
 );
+ALTER TABLE identificacao_aluno
+ADD COLUMN cartao_sus VARCHAR(20);
 
-ALTER TABLE identificacao_aluno 
+ALTER TABLE identificacao_aluno
 ADD COLUMN data_nascimento DATE,
 ADD COLUMN tipo_nascimento VARCHAR(2),
 ADD COLUMN nacionalidade VARCHAR(30),
@@ -30,6 +32,7 @@ CREATE TABLE certidao (
     livro VARCHAR(10), -- certidão antiga
     folha VARCHAR(10), -- certidão antiga
     data_expedicao_certidao DATE,
+    tipo_certidao_civil VARCHAR(200),
     FOREIGN KEY (id_aluno) REFERENCES identificacao_aluno(id_aluno)
 );
 
@@ -53,6 +56,9 @@ CREATE TABLE saude (
     FOREIGN KEY (id_aluno) REFERENCES identificacao_aluno(id_aluno)
 );
 
+ALTER TABLE saude
+ADD COLUMN vacina VARCHAR(20);
+
 CREATE TABLE endereco (
 	id_endereco SERIAL PRIMARY KEY,
     id_aluno INT,
@@ -74,11 +80,12 @@ CREATE TABLE dados_pais_responsavel (
     id_aluno INT,
     nome_mae VARCHAR(200),
     nome_pai VARCHAR(200),
+    responsavel VARCHAR(255),
     FOREIGN KEY (id_aluno) REFERENCES identificacao_aluno(id_aluno)
 );
-
-ALTER TABLE dados_pais_responsavel 
-ADD COLUMN responsavel VARCHAR(255);
+ALTER TABLE dados_pais_responsavel
+ADD COLUMN cpf_responsavel VARCHAR(11),
+ADD COLUMN rg_responsavel VARCHAR(7);
 
 CREATE TABLE informacoes_matricula (
 	id_informacoes_matricula SERIAL PRIMARY KEY,
@@ -97,11 +104,14 @@ CREATE TABLE informacoes_matricula (
     FOREIGN KEY (id_aluno) REFERENCES identificacao_aluno(id_aluno)
 );
 
-ALTER TABLE informacoes_matricula ADD COLUMN ano_letivo INT;
+ALTER TABLE informacoes_matricula
+ADD COLUMN ano_letivo INT;
 
-ALTER TABLE informacoes_matricula 
+ALTER TABLE informacoes_matricula
 ADD COLUMN codigo_aluno VARCHAR(20),
-ADD COLUMN documento_pendente BOOLEAN;
+ADD COLUMN documento_pendente BOOLEAN,
+ADD COLUMN transferencia VARCHAR(200),
+ADD COLUMN ressalvas VARCHAR(255);
 
 CREATE TABLE frequencia (
     id_frequencia SERIAL PRIMARY KEY,
@@ -149,5 +159,9 @@ CREATE TABLE controle (
 	letivos_dez INT
 );
 
+INSERT INTO usuarios (login, senha, nome_professor) VALUES ('admin', 'admin', 'ADMIN');
+
 INSERT INTO controle (ano, letivos_jan, letivos_fev, letivos_mar, letivos_abr, letivos_mai, letivos_jun, letivos_jul, letivos_ago, letivos_set, letivos_out, letivos_nov, letivos_dez) VALUES (2024, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+
 
