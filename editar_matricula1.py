@@ -2,6 +2,9 @@ from PyQt6.QtCore import Qt
 from database import *
 from editar_matricula2 import *
 from PyQt6.QtGui import QIcon
+import sys
+import os
+
 
 class Ui_Edit_1_Window(object):
     def setupUi(self, MainWindow):
@@ -10,7 +13,13 @@ class Ui_Edit_1_Window(object):
         MainWindow.setMinimumSize(936, 750)
         MainWindow.setMaximumSize(936, 750)
         MainWindow.setWindowFlags(MainWindow.windowFlags() & ~Qt.WindowType.WindowMaximizeButtonHint)
-        MainWindow.setWindowIcon(QIcon('imagens\\2.png'))
+
+        def resource_path(relative_path):
+            """ Obtém o caminho absoluto para o arquivo (funciona tanto para .exe quanto para o script). """
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            return os.path.join(base_path, relative_path)
+
+        MainWindow.setWindowIcon(QIcon(resource_path('imagens\\2.png')))
         MainWindow.setStyleSheet("background-color: rgb(243, 230, 213);\n"
                                  "\n"
                                  "")
@@ -87,22 +96,7 @@ class Ui_Edit_1_Window(object):
         self.turma_selection.addItem("")
         self.turma_selection.addItem("")
         self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
-        self.turma_selection.addItem("")
+
         self.scrollArea = QtWidgets.QScrollArea(parent=self.centralwidget)
         self.scrollArea.setGeometry(QtCore.QRect(130, 210, 721, 451))
         self.scrollArea.setWidgetResizable(True)
@@ -156,33 +150,17 @@ class Ui_Edit_1_Window(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Editar Matrícula do Aluno"))
-        #self.confirm_button.setText(_translate("MainWindow", "Confirmar"))
-        self.cancel_button.setText(_translate("MainWindow", "Cancelar"))
+        self.cancel_button.setText(_translate("MainWindow", "Voltar"))
         self.title_label.setText(_translate("MainWindow", "<html><head/><body><p>alunos</p></body></html>"))
         self.refresh_button.setText(_translate("MainWindow", "Atualizar"))
-        self.turma_selection.setItemText(0, _translate("MainWindow", "01. Berçário I"))
-        self.turma_selection.setItemText(1, _translate("MainWindow", "02. Berçário II"))
-        self.turma_selection.setItemText(2, _translate("MainWindow", "03. Maternal I"))
-        self.turma_selection.setItemText(3, _translate("MainWindow", "04. Maternal II"))
-        self.turma_selection.setItemText(4, _translate("MainWindow", "05. Jardim I"))
-        self.turma_selection.setItemText(5, _translate("MainWindow", "06. Jardim II"))
-        self.turma_selection.setItemText(6, _translate("MainWindow", "07. Ciclo I - 1° Ano"))
-        self.turma_selection.setItemText(7, _translate("MainWindow", "08. Ciclo I - 2° Ano"))
-        self.turma_selection.setItemText(8, _translate("MainWindow", "09. Ciclo I - 3° Ano"))
-        self.turma_selection.setItemText(9, _translate("MainWindow", "10. Ciclo II - 1° Ano"))
-        self.turma_selection.setItemText(10, _translate("MainWindow", "11. Ciclo II - 2° Ano"))
-        self.turma_selection.setItemText(11, _translate("MainWindow", "12. Ciclo III - 1° Ano"))
-        self.turma_selection.setItemText(12, _translate("MainWindow", "13. Ciclo III - 2° Ano"))
-        self.turma_selection.setItemText(13, _translate("MainWindow", "14. Ciclo IV - 1° Ano"))
-        self.turma_selection.setItemText(14, _translate("MainWindow", "15. Ciclo IV - 2° Ano"))
-        self.turma_selection.setItemText(15, _translate("MainWindow", "16. 1ª Totalidade"))
-        self.turma_selection.setItemText(16, _translate("MainWindow", "17.  2ª Totalidade"))
-        self.turma_selection.setItemText(17, _translate("MainWindow", "18.  3ª Etapa"))
-        self.turma_selection.setItemText(18, _translate("MainWindow", "19.  4ª Etapa"))
-        self.turma_selection.setItemText(19, _translate("MainWindow", "20. 1° Ano"))
-        self.turma_selection.setItemText(20, _translate("MainWindow", "21. 2° Ano"))
-        self.turma_selection.setItemText(21, _translate("MainWindow", "22. 3° Ano"))
-        self.turma_selection.setItemText(22, _translate("MainWindow", "23. 4° Ano"))
+        self.turma_selection.setItemText(0, _translate("MainWindow", "01. Jardim I"))
+        self.turma_selection.setItemText(1, _translate("MainWindow", "02. Jardim II"))
+        self.turma_selection.setItemText(2, _translate("MainWindow", "03. 1° Ano"))
+        self.turma_selection.setItemText(3, _translate("MainWindow", "04. 2° Ano"))
+        self.turma_selection.setItemText(4, _translate("MainWindow", "05. 3° Ano"))
+        self.turma_selection.setItemText(5, _translate("MainWindow", "06. 4° Ano"))
+        self.turma_selection.setItemText(6, _translate("MainWindow", "07. 5° Ano"))
+
         __sortingEnabled = self.lista_alunos.isSortingEnabled()
         self.lista_alunos.setSortingEnabled(False)
         self.lista_alunos.setSortingEnabled(__sortingEnabled)
@@ -248,7 +226,7 @@ class Ui_Edit_1_Window(object):
         try:
             cur = conn.cursor()
 
-            # IDENTIFICAÇÃO ALUNO
+            #region IDENTIFICAÇÃO_ALUNO
             query = """
                 SELECT * FROM identificacao_aluno
                 WHERE id_aluno = %s
@@ -272,8 +250,16 @@ class Ui_Edit_1_Window(object):
             uf_identidade = tabela[12]
             cpf = tabela[13]
             raca = tabela[14]
+            cartao_sus = tabela[15]
+            data_nasc = tabela[16]
+            #print("Data de nascimento obtida:", data_nasc)
+            tipo_nasc = tabela[17]
+            nacionalidade = tabela[18]
+            codigo_inep = tabela[19]
+        
+            #endregion
 
-            # CERTIDÃO
+            #region CERTIDÃO
             query = """
                 SELECT * FROM certidao
                 WHERE id_aluno = %s
@@ -286,8 +272,10 @@ class Ui_Edit_1_Window(object):
             livro = tabela[4]
             folha = tabela[5]
             data_expedicao_certidao = tabela[6]
+            tipo_certidao_civil = tabela[7]
+            #endregion
 
-            # INFORMAÇÕES MATRICULA
+            #region INFORMAÇÕES_MATRICULA
             query = """
                 SELECT * FROM informacoes_matricula
                 WHERE id_aluno = %s
@@ -307,8 +295,13 @@ class Ui_Edit_1_Window(object):
             participa_programa = tabela[11]
             transporte_escolar = tabela[12]
             ano_letivo = tabela[13]
+            codigo_aluno = tabela[14]
+            doc_pendente = tabela[15]
+            transferencia = tabela[16]
+            ressalvas = tabela[17]
+            #endregion
 
-            # DADOS PAIS RESPONSAVEL
+            #region DADOS_PAIS_RESPONSAVEL
             query = """
                 SELECT * FROM dados_pais_responsavel
                 WHERE id_aluno = %s
@@ -317,8 +310,13 @@ class Ui_Edit_1_Window(object):
             tabela = cur.fetchone()
             nome_mae = tabela[2]
             nome_pai = tabela[3]
+            responsavel = tabela[4]
+            cpf_responsavel = tabela[5]
+            rg_responsavel = tabela[6]
 
-            # SAUDE
+            #endregion
+
+            #region SAUDE
             query = """
                 SELECT * FROM saude
                 WHERE id_aluno = %s
@@ -340,8 +338,10 @@ class Ui_Edit_1_Window(object):
             surdez = tabela[13]
             surdocegueira = tabela[14]
             altas_habilidades = tabela[15]
+            vacina = tabela[16]
+            #endregion
 
-            # ENDERECO
+            #region ENDERECO
             query = """
                 SELECT * FROM endereco
                 WHERE id_aluno = %s
@@ -359,10 +359,27 @@ class Ui_Edit_1_Window(object):
             telefone = tabela[9]
             email = tabela[10]
             uf_endereco = tabela[11]
+            #endregion
+
+            def get_data_path():
+                if getattr(sys, 'frozen', False):
+                    # Diretório do executável
+                    base_path = os.path.dirname(sys.executable)
+                else:
+                    # Diretório de execução do script
+                    base_path = os.path.abspath(".")
+
+                data_dir = os.path.join(base_path, 'dados_temporarios')
+
+                os.makedirs(data_dir, exist_ok=True)
+
+                return data_dir
 
 
-            with open('dados_editar.pkl', 'wb') as arquivo:
-                # IDENTIFICAÇÃO ALUNO
+            file_path = os.path.join(get_data_path(), 'dados_editar.pkl')
+
+            with open(file_path, 'wb') as arquivo:
+                #region IDENTIFICAÇÃO_ALUNO
                 pickle.dump(id_aluno, arquivo)
                 pickle.dump(nis, arquivo)
                 pickle.dump(nome_aluno, arquivo)
@@ -378,15 +395,24 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(uf_identidade, arquivo)
                 pickle.dump(cpf, arquivo)
                 pickle.dump(raca, arquivo)
+                pickle.dump(data_nasc, arquivo)
+                pickle.dump(tipo_nasc, arquivo)
+                pickle.dump(nacionalidade, arquivo)
+                pickle.dump(codigo_inep, arquivo)
+                pickle.dump(cartao_sus, arquivo)
+                #endregion
 
-                # CERTIDÃO
+                #region CERTIDÃO
                 pickle.dump(num_matricula_rc, arquivo)
                 pickle.dump(num_termo, arquivo)
                 pickle.dump(livro, arquivo)
                 pickle.dump(folha, arquivo)
                 pickle.dump(data_expedicao_certidao, arquivo)
+                pickle.dump(tipo_certidao_civil, arquivo)
 
-                # INFORMAÇÕES MATRICULA
+                #endregion
+
+                #region INFORMAÇÕES_MATRICULA
                 pickle.dump(nome_escola, arquivo)
                 pickle.dump(cod_censo, arquivo)
                 pickle.dump(data_ingresso_escola, arquivo)
@@ -399,12 +425,21 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(participa_programa, arquivo)
                 pickle.dump(transporte_escolar, arquivo)
                 pickle.dump(ano_letivo, arquivo)
+                pickle.dump(codigo_aluno, arquivo)
+                pickle.dump(doc_pendente, arquivo)
+                pickle.dump(transferencia, arquivo)
+                pickle.dump(ressalvas, arquivo)
+                #endregion
 
-                # DADOS PAIS RESPONSAVEL
+                #region DADOS PAIS_RESPONSAVEL
                 pickle.dump(nome_mae, arquivo)
                 pickle.dump(nome_pai, arquivo)
+                pickle.dump(responsavel, arquivo)
+                pickle.dump(cpf_responsavel, arquivo)
+                pickle.dump(rg_responsavel, arquivo)
+                #endregion
 
-                # SAUDE
+                #region SAUDE
                 pickle.dump(autismo, arquivo)
                 pickle.dump(rett, arquivo)
                 pickle.dump(asperger, arquivo)
@@ -419,8 +454,11 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(surdez, arquivo)
                 pickle.dump(surdocegueira, arquivo)
                 pickle.dump(altas_habilidades, arquivo)
+                pickle.dump(vacina, arquivo)
 
-                # ENDERECO
+                #endregion
+
+                #region ENDERECO
                 pickle.dump(endereco, arquivo)
                 pickle.dump(complemento, arquivo)
                 pickle.dump(num_endereco, arquivo)
@@ -431,12 +469,11 @@ class Ui_Edit_1_Window(object):
                 pickle.dump(telefone, arquivo)
                 pickle.dump(email, arquivo)
                 pickle.dump(uf_endereco, arquivo)
-
+                #endregion
 
         except Exception as e:
             print(f"Erro ao executar query: {e}")
             conn.rollback()
-            return []
         finally:
             cur.close()
             conn.close()
@@ -444,8 +481,6 @@ class Ui_Edit_1_Window(object):
     def editar_aluno(self):
         for index in range(self.lista_alunos.count()):
             item = self.lista_alunos.item(index)
-
-            print(item)
 
             if item.checkState() == Qt.CheckState.Checked:
 
@@ -459,7 +494,7 @@ class Ui_Edit_1_Window(object):
                     print(f"Não foi possível encontrar o ID para a matrícula {matricula}")
 
             else:
-                print(f"Nenhum item selecionado")
+                print(f"Item não selecionado")
 
     def excluir_aluno(self):
         for index in range(self.lista_alunos.count()):
@@ -467,7 +502,7 @@ class Ui_Edit_1_Window(object):
 
             if item.checkState() == Qt.CheckState.Checked:
 
-                print(item)
+                #print(item)
 
                 matricula, nome_aluno = item.text().split(' - ')
                 id_aluno = obter_id_aluno_por_matricula(matricula)
@@ -488,6 +523,7 @@ class Ui_Edit_1_Window(object):
                 print(f"Item não selecionado")
 
         self.atualizar_lista()
+
 
 if __name__ == "__main__":
     import sys

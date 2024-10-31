@@ -48,7 +48,7 @@ class Ui_RegisterUserWindow():
         self.username.setPlaceholderText(_translate("RegisterUserWindow", "Username"))
         self.senha.setPlaceholderText(_translate("RegisterUserWindow", "Senha"))
         self.confirmar_button.setText(_translate("RegisterUserWindow", "Confirmar"))
-        self.cancelar_button.setText(_translate("RegisterUserWindow", "Cancelar"))
+        self.cancelar_button.setText(_translate("RegisterUserWindow", "Voltar"))
 
     def cadastrar_sistema(self, RegisterUserWindow):
         login = self.username.text()

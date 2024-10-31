@@ -2,11 +2,16 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QMessageBox
 from PyQt6.QtGui import QIcon
-from database import listar_alunos_por_turma, realiza_freq, obter_id_aluno_por_matricula
+from database import *
 from criar_excel import adicionar_dados_excel
+from datetime import date
+import sys
+import os
+
 
 class UI_FrequenciaWindow(object):
     def setupUi(self, MainWindow):
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         MainWindow.setMinimumSize(1280, 720)
@@ -17,7 +22,13 @@ class UI_FrequenciaWindow(object):
 "")
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        MainWindow.setWindowIcon(QIcon('imagens\\1.png'))
+
+        def resource_path(relative_path):
+            """ Obtém o caminho absoluto para o arquivo (funciona tanto para .exe quanto para o script). """
+            base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+            return os.path.join(base_path, relative_path)
+
+        MainWindow.setWindowIcon(QIcon(resource_path('imagens\\1.png')))
         MainWindow.setStyleSheet("background-color: rgb(243, 230, 213);")
         
         self.lista_freq = QtWidgets.QListWidget(parent=self.centralwidget)
@@ -83,7 +94,7 @@ class UI_FrequenciaWindow(object):
 "padding: 6px;\n"
 "color: rgb(131, 3, 2);")
         self.cancel_button.setObjectName("cancel_button")
-        self.cancel_button.setText("Cancelar")
+        self.cancel_button.setText("Voltar")
         self.cancel_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         
         self.just_label = QtWidgets.QLabel(parent=self.centralwidget)
@@ -110,15 +121,17 @@ class UI_FrequenciaWindow(object):
         self.just_caixa.setObjectName("just_caixa")
         
         self.title_label = QtWidgets.QLabel(parent=self.centralwidget)
-        self.title_label.setGeometry(QtCore.QRect(410, 40, 513, 84))
+        self.title_label.setGeometry(QtCore.QRect(410, 30, 513, 84))
         font = QtGui.QFont()
         font.setFamily("Trend Slab Four")
         font.setPointSize(48)
         self.title_label.setFont(font)
         self.title_label.setStyleSheet("color: rgb(130, 3, 0);")
         self.title_label.setObjectName("title_label")
+
         
         self.date_selection = QtWidgets.QDateEdit(parent=self.centralwidget)
+        self.date_selection.setDate(date.today())
         self.date_selection.setGeometry(QtCore.QRect(80, 90, 151, 41))
         
         font = QtGui.QFont()        
@@ -144,7 +157,7 @@ class UI_FrequenciaWindow(object):
         self.date_selection.setObjectName("date_selection")
         
         self.turma_selection = QtWidgets.QComboBox(parent=self.centralwidget)
-        self.turma_selection.setGeometry(QtCore.QRect(80, 50, 291, 41))
+        self.turma_selection.setGeometry(QtCore.QRect(80, 40, 291, 41))
         self.turma_selection.setStyleSheet("background-color:rgb(243, 230, 213);\n"
 "border-style: outset;\n"
 "border-width: 2px;\n"
@@ -156,32 +169,16 @@ class UI_FrequenciaWindow(object):
 "alternate-background-color:rgb(243, 230, 213);")
         self.turma_selection.setEditable(True)
         self.turma_selection.setObjectName("turma_selection")
-        self.turma_selection.addItem("01. Berçário I")
-        self.turma_selection.addItem("02. Berçário II")
-        self.turma_selection.addItem("03. Maternal I")
-        self.turma_selection.addItem("04. Maternal II")
-        self.turma_selection.addItem("05. Jardim I")
-        self.turma_selection.addItem("06. Jardim II")
-        self.turma_selection.addItem("07. Ciclo I - 1° Ano")
-        self.turma_selection.addItem("08. Ciclo I - 2° Ano")
-        self.turma_selection.addItem("09. Ciclo I - 3° Ano")
-        self.turma_selection.addItem("10. Ciclo II - 1° Ano")
-        self.turma_selection.addItem("11. Ciclo II - 2° Ano")
-        self.turma_selection.addItem("12. Ciclo III - 1° Ano")
-        self.turma_selection.addItem("13. Ciclo III - 2° Ano")
-        self.turma_selection.addItem("14. Ciclo IV - 1° Ano")
-        self.turma_selection.addItem("15. Ciclo IV - 2° Ano")
-        self.turma_selection.addItem("16. 1ª Totalidade")
-        self.turma_selection.addItem("17.  2ª Totalidade")
-        self.turma_selection.addItem("18.  3ª Etapa")
-        self.turma_selection.addItem("19.  4ª Etapa")
-        self.turma_selection.addItem("20. 1° Ano")
-        self.turma_selection.addItem("21. 2° Ano")
-        self.turma_selection.addItem("22. 3° Ano")
-        self.turma_selection.addItem("23. 4° Ano")
+        self.turma_selection.addItem("01. Jardim I")
+        self.turma_selection.addItem("02. Jardim II")
+        self.turma_selection.addItem("03. 1° Ano")
+        self.turma_selection.addItem("04. 2° Ano")
+        self.turma_selection.addItem("05. 3° Ano")
+        self.turma_selection.addItem("06. 4° Ano")
+        self.turma_selection.addItem("07. 5° Ano")
         
         self.refresh_button = QtWidgets.QPushButton(parent=self.centralwidget, clicked = lambda: self.atualizar_lista_de_frequencia())
-        self.refresh_button.setGeometry(QtCore.QRect(230, 90, 136, 41))
+        self.refresh_button.setGeometry(QtCore.QRect(240, 90, 136, 41))
         self.refresh_button.setStyleSheet("background-color: rgb(131, 3, 2);;\n"
 "border-style: outset;\n"
 "border-width: 2px;\n"
@@ -201,6 +198,8 @@ class UI_FrequenciaWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.atualizar_lista_de_frequencia()
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Frequência"))
@@ -208,6 +207,9 @@ class UI_FrequenciaWindow(object):
         self.just_label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:24pt;\">Justificativa de faltas</span></p></body></html>"))
         self.title_label.setText(_translate("MainWindow", "<html><head/><body><p>frequencia</p></body></html>"))
         self.date_selection.setDisplayFormat(_translate("MainWindow", "d/M/yyyy"))
+
+
+#region FUNÇÕES
 
     def atualizar_lista_de_frequencia(self):
         alunos = self.listar_alunos()
@@ -230,6 +232,8 @@ class UI_FrequenciaWindow(object):
 
     def confirmar_frequencia(self):
         data_presenca = self.date_selection.date().toString("yyyy-MM-dd")
+        mes = self.date_selection.date().month()
+        ano = self.date_selection.date().year()
         justificativa = self.just_caixa.toPlainText()
         observacoes = self.obs_text.toPlainText()
         sucesso = True
@@ -238,6 +242,7 @@ class UI_FrequenciaWindow(object):
                 item = self.lista_freq.item(index)
                 matricula, nome_aluno = item.text().split(' - ')
                 id_aluno = obter_id_aluno_por_matricula(matricula)
+                total = obter_total_dias_mes(mes)
                 if id_aluno:
                         estado_presenca = 'P' if item.checkState() == Qt.CheckState.Checked else 'A'
                         realiza_freq(id_aluno, nome_aluno, matricula, data_presenca, estado_presenca, justificativa, observacoes)
@@ -251,14 +256,19 @@ class UI_FrequenciaWindow(object):
                                 "OBSERVAÇÕES": observacoes
                         }
                         adicionar_dados_excel('base_dados_frequencia.xlsx', informacoes_frequencia)
+
+                        novo_total = total + 1  # Adiciona 1 ao total de dias letivos toda vez que realiza a frequencia
+                        print(novo_total)
+                        update_controle(novo_total, mes, ano)
                 else:
                         sucesso = False
                         print(f"Não foi possível encontrar o ID para a matrícula {matricula}")
         if sucesso:
+
+                self.atualizar_lista_de_frequencia()
                 self.exibir_mensagem_sucesso()
         else:
                 self.exibir_mensagem_erro()
-
 
     def exibir_mensagem_sucesso(self):
         data_presenca = self.date_selection.date().toString("yyyy-MM-dd")
@@ -289,3 +299,5 @@ class UI_FrequenciaWindow(object):
         self.tela_principal.show()                     
         QtWidgets.QApplication.instance().activeWindow().close()
 
+
+    #endregion
